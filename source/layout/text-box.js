@@ -13,17 +13,6 @@ var TextBox = function(parent, text) {
 	Box.call(this, parent.style);
 	this.parent = parent;
 	this.text = text;
-	// this.children = null;
-
-	// this.parent = parent;
-	// this.text = text;
-
-	// this.position = { x: 0, y: 0 };
-	// this.dimensions = { width: 0, height: 0 };
-
-	// this.margin = {};
-	// this.border = {};
-	// this.padding = {};
 };
 
 util.inherits(TextBox, Box);
@@ -44,10 +33,6 @@ TextBox.prototype.layout = function(offset) {
 
 TextBox.prototype.toPx = ParentBox.prototype.toPx;
 TextBox.prototype.detach = ParentBox.prototype.detach;
-
-// TextBox.prototype.draw = function(context) {
-
-// };
 
 TextBox.prototype.isCollapsibleWhitespace = function() {
 	var format = this.style['white-space'];

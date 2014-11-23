@@ -85,79 +85,6 @@ CommaSeparated.prototype.toString = function() {
 	return this.values.join(', ');
 };
 
-// var CommaSeparated = define(function(definitions) {
-// 	this.definitions = definitions;
-// });
-
-// CommaSeparated.TYPE = '<comma-separated>';
-
-// CommaSeparated.is = function(value) {
-// 	return value.type === CommaSeparated.TYPE;
-// };
-
-// CommaSeparated.create = function(values) {
-// 	return {
-// 		values: values,
-// 		type: CommaSeparated.TYPE,
-// 		toString: function() {
-// 			return this.values.join(', ');
-// 		}
-// 	};
-// };
-
-// CommaSeparated.prototype.parse = function(str) {
-// 	var self = this;
-// 	var values = str
-// 		.split(',')
-// 		.map(function(v) {
-// 			v = v.trim();
-// 			return self._parse(v);
-// 		})
-// 		.filter(Boolean);
-
-// 	return CommaSeparated.create(values);
-// };
-
-// CommaSeparated.prototype._parse = function(val) {
-// 	for(var i = 0; i < this.definitions.length; i++) {
-// 		var v = this.definitions[i].parse(value);
-// 		if(v) return v;
-// 	}
-// };
-
-// CommaSeparated.prototype.type = CommaSeparated.TYPE;
-// CommaSeparated.prototype.toString = function() {
-// 	return this.values.join(', ');
-// };
-
-// var define = function(type, fn) {
-// 	var klass = function() {
-// 		var self = Object.create(klass.prototype);
-// 		fn.apply(self, arguments);
-
-// 		return self;
-// 	};
-
-// 	klass.TYPE = type;
-// 	klass.prototype.type = type;
-
-// 	return klass;
-// };
-
-// var keyword = function(type, name) {
-// 	var klass = define(type, function() {});
-
-// 	klass.parse = function(str) {
-// 		if(name === str.toLowerCase()) return new klass();
-// 	};
-
-// 	klass.prototype.toString = function() {
-// 		return name;
-// 	};
-
-// 	return klass;
-// };
-
 var Length = define(function(length, unit) {
 	this.length = length;
 	this.unit = unit;
@@ -317,45 +244,10 @@ Object.keys(declarations).forEach(function(property) {
 	if(typeof definition === 'string') return;
 
 	keywords(definition.values, Keyword);
-
-	// definition.values.forEach(function(v) {
-	// 	var	isPredefined = v === Length.TYPE || v === Percentage.TYPE ||
-	// 		v === Number.TYPE || v === Color.TYPE;
-
-	// 	if(isPredefined) return;
-
-	// 	v = capitalize(camelize(v));
-	// 	if(Keyword[v]) return;
-
-	// 	Keyword[v] = new Keyword(v);
-	// });
 });
 
 Keyword.Initial = new Keyword('initial');
 Keyword.Inherit = new Keyword('inherit');
-
-// Keyword.Initial = new Keyword('initial');
-// Keyword.Inherit = new Keyword('inherit');
-// Keyword.Auto = new Keyword('auto');
-// Keyword.Left = new Keyword('left');
-// Keyword.Right = new Keyword('right');
-// Keyword.Center = new Keyword('center');
-// Keyword.Inline = new Keyword('inline');
-// Keyword.Block = new Keyword('block');
-// Keyword.None = new Keyword('none');
-
-
-// exports.Inherit = keyword('Inherit', 'inherit');
-
-// exports.Auto = keyword('Auto', 'auto');
-
-// exports.Left = keyword('Left', 'left');
-// exports.Right = keyword('Right', 'right');
-// exports.Center = keyword('Center', 'center');
-
-// exports.Inline = keyword('Inline', 'inline');
-// exports.Block = keyword('Block', 'block');
-// exports.None = keyword('None', 'none');
 
 exports.CommaSeparated = CommaSeparated;
 exports.Length = Length;

@@ -7,18 +7,6 @@ var specificity = require('specificity');
 var declarations = require('./declarations');
 var compare = require('./compare-specificity');
 
-// var parse = function(name, value) {
-// 	// var keys = Object.keys(declarations);
-
-// 	for(var i = 0; i < declarations.length; i++) {
-// 		// var key = keys[i];
-// 		var fn = declarations[i].parse;
-// 		var p = fn(name, value);
-
-// 		if(p) return p;
-// 	}
-// };
-
 var parse = function(property, value, order, rule) {
 	var declaration = declarations[property];
 	return declaration && declaration.parse(property, value, order, rule);
@@ -45,14 +33,6 @@ Rule.prototype.compareTo = function(other) {
 	var priority = other.stylesheet && this.stylesheet.compareTo(other.stylesheet);
 	if(priority) return priority;
 
-	// for(var i = 0; i < this.specificity.length; i++) {
-	// 	var a = this.specificity[i];
-	// 	var b = other.specificity[i];
-
-	// 	if(a === b) continue;
-	// 	return a - b;
-	// }
-
 	var diff = compare(this.specificity, other.specificity);
 	return diff ? diff : this.order - other.order;
 };
@@ -74,24 +54,9 @@ Stylesheet.parse = function(str, priority) {
 	var ast = css.parse(str, { silent: true });
 	var rules = ast.stylesheet.rules;
 
-	// var result = [];
 	var stylesheet = new Stylesheet(priority);
 
 	rules.forEach(function(r) {
-		// var declarations = r.declarations
-		// 	.map(function(d) {
-		// 		return parse(d.property, d.value);
-		// 	})
-		// 	.filter(Boolean);
-
-		// if(!declarations.length) return;
-
-		// r.selectors.forEach(function(s) {
-		// 	var rule = new Rule(s, declarations, r.position.start.line);
-		// 	// result.push(rule);
-		// 	stylesheet.rules.push(rule);
-		// });
-
 		r.selectors.forEach(function(s) {
 			var rule = new Rule(s, r.position.start.line, stylesheet);
 			var order = 1;
@@ -107,12 +72,6 @@ Stylesheet.parse = function(str, priority) {
 			if(rule.declarations.length) stylesheet.rules.push(rule);
 		});
 	});
-
-	// result.sort(function(a, b) {
-	// 	return -a.compareTo(b);
-	// });
-
-	// return new Stylesheet(result, priority);
 
 	return stylesheet;
 };

@@ -15,13 +15,6 @@ var reduce = function(arr, fn) {
 	}, []);
 };
 
-// var mapify = function(arr, property) {
-// 	return arr.reduce(function(acc, item) {
-// 		acc[item[property]] = item;
-// 		return acc;
-// 	}, {});
-// };
-
 var ElementRule = function(element) {
 	this.element = element;
 
@@ -78,8 +71,6 @@ module.exports = function(stylesheets, node) {
 	declarations.sort(function(a, b) {
 		return a.compareTo(b);
 	});
-
-	// node.style = mapify(declarations, 'property');
 
 	var style = {};
 	declarations.forEach(function(declaration) {
