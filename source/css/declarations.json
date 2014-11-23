@@ -1,0 +1,98 @@
+{
+	"display": {
+		"initial": "inline",
+		"values": ["inline", "block", "none"],
+		"inherited": false
+	},
+	"text-align": {
+		"initial": "left",
+		"values": ["left", "center", "right"],
+		"inherited": true
+	},
+	"color": {
+		"initial": "#000000",
+		"values": ["<color>"],
+		"inherited": true
+	},
+	"font-family": {
+		"initial": "Times New Roman",
+		"values": [["<family-name>", "sans-serif", "serif", "monospace", "cursive", "fantasy"]],
+		"inherited": true
+	},
+	"font-weight": {
+		"initial": "normal",
+		"values": ["normal", "bold"],
+		"inherited": true
+	},
+	"font-style": {
+		"initial": "normal",
+		"values": ["normal", "italic", "oblique"],
+		"inherited": true
+	},
+	"font-size": {
+		"initial": "16px",
+		"values": ["<percentage>", "<length>"],
+		"inherited": true
+	},
+	"line-height": {
+		"initial": "1.2",
+		"values": ["<number>", "<percentage>", "<length>"],
+		"inherited": true
+	},
+	"white-space": {
+		"initial": "normal",
+		"values": ["normal", "nowrap", "pre"],
+		"inherited": true
+	},
+	"background-color": {
+		"initial": "#ffffff",
+		"values": ["<color>"],
+		"inherited": false
+	},
+	"width": {
+		"initial": "auto",
+		"values": ["<percentage>", "<length>", "auto"],
+		"inherited": false
+	},
+	"height": "width",
+	"margin-top": {
+		"initial": "0px",
+		"values": ["<percentage>", "<length>", "auto"],
+		"inherited": false
+	},
+	"margin-right": "margin-top",
+	"margin-bottom": "margin-top",
+	"margin-left": "margin-top",
+	"padding-top": {
+		"initial": "0px",
+		"values": ["<percentage>", "<length>"],
+		"inherited": false
+	},
+	"padding-right": "padding-top",
+	"padding-bottom": "padding-top",
+	"padding-left": "padding-top",
+	"border-top-style": {
+		"initial": "none",
+		"values": ["none", "solid", "dashed"],
+		"inherited": false
+	},
+	"border-right-style": "border-top-style",
+	"border-bottom-style": "border-top-style",
+	"border-left-style": "border-top-style",
+	"border-top-width": {
+		"initial": "1px",
+		"values": ["<length>"],
+		"inherited": false
+	},
+	"border-right-width": "border-top-width",
+	"border-bottom-width": "border-top-width",
+	"border-left-width": "border-top-width",
+	"border-top-color": {
+		"initial": "currentColor",
+		"values": ["<color>", "currentColor"],
+		"inherited": false
+	},
+	"border-right-color": "border-top-color",
+	"border-bottom-color": "border-top-color",
+	"border-left-color": "border-top-color"
+}

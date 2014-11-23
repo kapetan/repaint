@@ -1,0 +1,47 @@
+html {
+	display: block;
+}
+
+head {
+	display: none;
+}
+
+style {
+	display: none;
+}
+
+script {
+	display: none;
+}
+
+body {
+	display: block;
+
+	margin-top: 8px;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	margin-left: 8px;
+}
+
+h1 {
+	display: block;
+	font-size: 2em;
+}
+
+h2 {
+	display: block;
+	font-size: 1.5em;
+}
+
+div {
+	display: block;
+}
+
+p {
+	display: block;
+
+	margin-top: 1em;
+	margin-right: 0;
+	margin-bottom: 1em;
+	margin-left: 0;
+}
