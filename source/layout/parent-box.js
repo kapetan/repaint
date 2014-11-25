@@ -17,15 +17,21 @@ var ParentBox = function(parent, style) {
 
 util.inherits(ParentBox, Box);
 
+ParentBox.prototype.layout = function() {};
+
+ParentBox.prototype.collapseWhitespace = function() {
+	var box, children = this.children.slice();
+
+	children.forEach(function(child) {
+		box = child.collapseWhitespace();
+	});
+
+	return box;
+};
+
 ParentBox.prototype.isCollapsibleWhitespace = function() {
 	return this.children.every(function(child) {
 		return child.isCollapsibleWhitespace();
-	});
-};
-
-ParentBox.prototype.isWhitespace = function() {
-	return this.children.every(function(child) {
-		return child.isWhitespace();
 	});
 };
 

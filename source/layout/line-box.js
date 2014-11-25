@@ -7,6 +7,19 @@ var LineBox = function(parent) {
 
 util.inherits(LineBox, ParentBox);
 
+LineBox.prototype.collapseWhitespace = function() {
+	if(this.isCollapsibleWhitespace()) return this.detach();
+
+	var box, strip = false;
+
+	this.children.forEach(function(child) {
+		box = child.collapseWhitespace(strip);
+		strip = box ? box.endsWithCollapsibleWhitespace() : strip;
+	});
+
+	return box;
+};
+
 LineBox.prototype.layout = function(offset) {
 	var parent = this.parent;
 

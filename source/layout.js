@@ -6,7 +6,6 @@ var BlockBox = require('./layout/block-box');
 var LineBox = require('./layout/line-box');
 var InlineBox = require('./layout/inline-box');
 var TextBox = require('./layout/text-box');
-var collapse = require('./layout/whitespace/collapse');
 
 var None = values.Keyword.None;
 var Block = values.Keyword.Block;
@@ -106,6 +105,7 @@ module.exports = function(html, viewport, context) {
 	viewport = new Viewport(viewport.position, viewport.dimensions);
 	build(viewport, viewport, html);
 
+	viewport.collapseWhitespace();
 	viewport.layout();
 
 	return viewport;

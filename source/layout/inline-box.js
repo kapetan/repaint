@@ -7,6 +7,17 @@ var InlineBox = function(parent, style) {
 
 util.inherits(InlineBox, ParentBox);
 
+InlineBox.prototype.collapseWhitespace = function(strip) {
+	var box;
+
+	this.children.forEach(function(child) {
+		box = child.collapseWhitespace(strip);
+		strip = box ? box.endsWithCollapsibleWhitespace() : strip;
+	});
+
+	return box;
+};
+
 InlineBox.prototype.layout = function(offset) {
 	this._layoutWidth();
 	this._layoutPosition(offset);

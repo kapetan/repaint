@@ -30,7 +30,6 @@ var attributes = function(box) {
 var toString = function(box, indentation) {
 	var space = indent(indentation);
 
-	if(box instanceof LineBox && box.isCollapsibleWhitespace()) return '';
 	if(box instanceof TextBox) return [space, name(box), attributes(box), '[', JSON.stringify(box.text), ']'].join('');
 
 	var children = box.children

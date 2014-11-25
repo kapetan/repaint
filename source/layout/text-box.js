@@ -2,6 +2,7 @@ var util = require('util');
 var textWidth = require('text-width');
 
 var values = require('../css/values');
+var collapse = require('./whitespace/collapse');
 var Box = require('./box');
 var ParentBox = require('./parent-box');
 
@@ -17,6 +18,21 @@ var TextBox = function(parent, text) {
 
 util.inherits(TextBox, Box);
 
+TextBox.prototype.endsWithCollapsibleWhitespace = function() {
+	return / $/.test(this.text) && this._isCollapsible();
+};
+
+TextBox.prototype.collapseWhitespace = function(strip) {
+	var format = this.style['white-space'].keyword;
+
+	this.text = collapse(this.text, {
+		format: format,
+		strip: strip
+	});
+
+	return this;
+};
+
 TextBox.prototype.layout = function(offset) {
 	var parent = this.parent;
 	var style = this.style;
@@ -31,15 +47,19 @@ TextBox.prototype.layout = function(offset) {
 	this.position.y = parent.position.y;
 };
 
+TextBox.prototype.isCollapsibleWhitespace = function() {
+	return this._isWhitespace() && this._isCollapsible();
+};
+
 TextBox.prototype.toPx = ParentBox.prototype.toPx;
 TextBox.prototype.detach = ParentBox.prototype.detach;
 
-TextBox.prototype.isCollapsibleWhitespace = function() {
+TextBox.prototype._isCollapsible = function() {
 	var format = this.style['white-space'];
-	return this.isWhitespace() && (Normal.is(format) || Nowrap.is(format) || PreLine.is(format));
+	return Normal.is(format) || Nowrap.is(format) || PreLine.is(format);
 };
 
-TextBox.prototype.isWhitespace = function() {
+TextBox.prototype._isWhitespace = function() {
 	return /^[\t\n\r ]*$/.test(this.text);
 };
 
