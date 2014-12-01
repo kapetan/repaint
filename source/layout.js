@@ -89,9 +89,9 @@ var build = function(parent, resume, nodes) {
 			if(Block.is(display)) {
 				var block = createBlockBox(parent, node, style);
 				parent = block[0], box = block[1];
+				resume = parent.parent;
 			}
 
-			resume = parent.parent;
 			parent = build(box, parent, node.childNodes);
 		} else if(node.type === ElementType.Text) {
 			createTextBox(parent, node);
