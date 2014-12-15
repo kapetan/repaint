@@ -10,6 +10,8 @@ var Normal = values.Keyword.Normal;
 var Nowrap = values.Keyword.Nowrap;
 var PreLine = values.Keyword.PreLine;
 
+var TAB = '        ';
+
 var TextBox = function(parent, text) {
 	Box.call(this, parent.style);
 	this.parent = parent;
@@ -19,40 +21,61 @@ var TextBox = function(parent, text) {
 util.inherits(TextBox, Box);
 
 TextBox.prototype.endsWithCollapsibleWhitespace = function() {
-	return / $/.test(this.text) && this._isCollapsible();
+	var text = collapse(this.text, { format: this.style['white-space'].keyword });
+	return / $/.test(text) && this._isCollapsible();
 };
 
-TextBox.prototype.collapseWhitespace = function(strip) {
+TextBox.prototype.collapseWhitespace = function(parent, strip) {
 	var format = this.style['white-space'].keyword;
-
-	this.text = collapse(this.text, {
+	var text = collapse(this.text, {
 		format: format,
 		strip: strip
 	});
 
-	return this;
+	var clone = new TextBox(parent, text);
+	parent.children.push(clone);
+
+	return clone;
 };
 
-TextBox.prototype.layout = function(offset) {
+TextBox.prototype.layout = function(offset, line) {
 	var parent = this.parent;
 	var style = this.style;
+	var position = this._textPosition(line);
+	var text = this.text.replace(/\t/g, TAB);
 
-	if(this.text) this.dimensions.height = this.toPx(style['font-size']);
-	this.dimensions.width = textWidth(this.text, {
+	if(position.first && this._isCollapsible()) text = text.replace(/^ /, '');
+	if(position.last && this._isCollapsible()) text = text.replace(/ $/, '');
+
+	this.dimensions.height = this.toPx(style['font-size']);
+	this.dimensions.width = textWidth(text, {
 		size: this.dimensions.height,
-		family: style['font-family']
+		family: style['font-family'],
+		weight: style['font-weight'],
+		style: style['font-style']
 	});
 
 	this.position.x = parent.position.x + offset.width;
 	this.position.y = parent.position.y;
+	this.text = text;
 };
 
 TextBox.prototype.isCollapsibleWhitespace = function() {
 	return this._isWhitespace() && this._isCollapsible();
 };
 
+TextBox.prototype.isEmpty = function() {
+	return !this.text.length;
+};
+
+TextBox.prototype.clone = function(parent) {
+	var clone = new TextBox(parent, this.text);
+	parent.children.push(clone);
+
+	return clone;
+};
+
 TextBox.prototype.toPx = ParentBox.prototype.toPx;
-TextBox.prototype.detach = ParentBox.prototype.detach;
 
 TextBox.prototype._isCollapsible = function() {
 	var format = this.style['white-space'];
@@ -61,6 +84,23 @@ TextBox.prototype._isCollapsible = function() {
 
 TextBox.prototype._isWhitespace = function() {
 	return /^[\t\n\r ]*$/.test(this.text);
+};
+
+TextBox.prototype._textPosition = function(line) {
+	var texts = line.texts().filter(function(t) {
+		return !t.isEmpty();
+	});
+
+	var i = texts.indexOf(this);
+
+	return {
+		first: i === 0,
+		last: i >= 0 && i === (texts.length - 1)
+	};
+};
+
+TextBox.prototype._split = function(length) {
+
 };
 
 module.exports = TextBox;

@@ -11,69 +11,37 @@ var None = values.Keyword.None;
 var Block = values.Keyword.Block;
 var Inline = values.Keyword.Inline;
 
-var getInlineLevelBoxParent = function(parent) {
-	if(parent instanceof BlockBox || parent instanceof Viewport) {
-		var line = parent.children[parent.children.length - 1];
-		if(!(line instanceof LineBox)) {
-			line = new LineBox(parent);
-			parent.children.push(line);
-		}
-
-		return line;
-	}
-
-	return parent;
+var isInlineLevelBox = function(box) {
+	return box instanceof InlineBox ||
+		box instanceof TextBox;
 };
 
-var getBlockContainerBoxAncestor = function(parent) {
-	var ancestor = parent;
+var isBlockLevelBox = function(box) {
+	return box instanceof Viewport ||
+		box instanceof LineBox ||
+		box instanceof BlockBox;
+};
+
+var isBlockContainerBox = function(box) {
+	return box instanceof Viewport ||
+		box instanceof BlockBox;
+};
+
+var branch = function(ancestor, descedant) {
 	var path = [];
 
-	while(!(ancestor instanceof BlockBox) && !(ancestor instanceof Viewport)) {
-		path.push(ancestor);
-		ancestor = ancestor.parent;
+	while(descedant !== ancestor) {
+		path.push(descedant);
+		if(!descedant.parent) throw new Error('No ancestor match');
+		descedant = descedant.parent;
 	}
 
-	return [ancestor, path];
+	return path.reduceRight(function(acc, box) {
+		return box.clone(acc);
+	}, ancestor);
 };
 
-var createBlockBox = function(parent, node, style) {
-	if(parent instanceof BlockBox || parent instanceof Viewport) {
-		var box = new BlockBox(parent, style);
-		parent.children.push(box);
-
-		return [parent, box];
-	} else if(parent instanceof LineBox || parent instanceof InlineBox) {
-		var block = getBlockContainerBoxAncestor(parent);
-		var ancestor = block[0];
-		var path = block[1];
-
-		var box = new BlockBox(ancestor, style);
-		ancestor.children.push(box);
-
-		var clone = path.reduceRight(function(acc, seg) {
-			return seg.clone(acc);
-		}, ancestor);
-
-		return [clone, box];
-	}
-};
-
-var createInlineBox = function(parent, node, style) {
-	var inline = getInlineLevelBoxParent(parent);
-	var box = new InlineBox(inline, style);
-	inline.children.push(box);
-
-	return [parent, box];
-};
-
-var createTextBox = function(parent, node) {
-	var inline = getInlineLevelBoxParent(parent);
-	var box = new TextBox(inline, node.data);
-	inline.children.push(box);
-};
-
-var build = function(parent, resume, nodes) {
+var build = function(parent, nodes) {
 	nodes.forEach(function(node) {
 		var box;
 
@@ -83,29 +51,109 @@ var build = function(parent, resume, nodes) {
 
 			if(None.is(display)) return;
 			if(Inline.is(display)) {
-				var inline = createInlineBox(parent, node, style);
-				parent = inline[0], box = inline[1];
+				box = new InlineBox(parent, style);
 			}
 			if(Block.is(display)) {
-				var block = createBlockBox(parent, node, style);
-				parent = block[0], box = block[1];
-				resume = parent.parent;
+				box = new BlockBox(parent, style);
 			}
 
-			parent = build(box, parent, node.childNodes);
+			build(box, node.childNodes);
 		} else if(node.type === ElementType.Text) {
-			createTextBox(parent, node);
+			box = new TextBox(parent, node.data);
+		}
+
+		if(box) parent.children.push(box);
+	});
+};
+
+var blocks = function(parent, boxes, ancestor) {
+	ancestor = ancestor || parent;
+
+	var isInline = isInlineLevelBox(parent);
+	var resume;
+
+	boxes.forEach(function(child) {
+		var isBlock = isBlockLevelBox(child);
+		var box;
+
+		if(isInline && isBlock) {
+			box = child.clone(ancestor);
+			parent = branch(ancestor, parent);
+			resume = parent.parent;
+		} else {
+			box = child.clone(parent);
+		}
+
+		if(child.children) {
+			var a = isBlockContainerBox(box) ? box : ancestor;
+			parent = blocks(box, child.children, a) || parent;
 		}
 	});
 
 	return resume;
 };
 
+var lines = function(parent, boxes) {
+	var isBlock = isBlockContainerBox(parent);
+	var line;
+
+	boxes.forEach(function(child) {
+		var isInline = isInlineLevelBox(child);
+		var box;
+
+		if(isBlock && isInline) {
+			if(!line) {
+				line = new LineBox(parent);
+				parent.children.push(line);
+			}
+
+			box = child.clone(line);
+		} else {
+			line = null;
+			box = child.clone(parent);
+		}
+
+		if(child.children) lines(box, child.children);
+	});
+};
+
+var collapseWhitespace = function(parent, boxes, strip) {
+	boxes.forEach(function(child) {
+		var box;
+
+		if(child instanceof LineBox) {
+			if(child.isCollapsibleWhitespace()) return;
+			strip = false;
+		}
+
+		if(child instanceof TextBox) {
+			box = child.collapseWhitespace(parent, strip);
+			strip = child.endsWithCollapsibleWhitespace();
+		} else {
+			box = child.clone(parent);
+		}
+
+		if(child.children) strip = collapseWhitespace(box, child.children, strip);
+	});
+
+	return strip;
+};
+
 module.exports = function(html, viewport, context) {
 	viewport = new Viewport(viewport.position, viewport.dimensions);
-	build(viewport, viewport, html);
 
-	viewport.collapseWhitespace();
+	build(viewport, html);
+
+	viewport = [
+		blocks,
+		lines,
+		collapseWhitespace
+	].reduce(function(acc, fn) {
+		var a = acc.clone();
+		fn(a, acc.children);
+		return a;
+	}, viewport);
+
 	viewport.layout();
 
 	return viewport;

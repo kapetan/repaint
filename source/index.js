@@ -105,6 +105,10 @@ var context5 = document.getElementById('canvas-3').getContext('2d');
 var example5html = fs.readFileSync(__dirname + '/../assets/example5.html', 'utf-8');
 var example5url = util.format('%s//%s/assets/example5.html', window.location.protocol, window.location.host);
 
+var context7 = document.getElementById('canvas-4').getContext('2d');
+var example7html = fs.readFileSync(__dirname + '/../assets/example7.html', 'utf-8');
+var example7url = util.format('%s//%s/assets/example7.html', window.location.protocol, window.location.host);
+
 // var canvas = document.getElementById('canvas');
 // var context = canvas.getContext('2d');
 
@@ -143,6 +147,16 @@ stream.write({
 	content: example5html,
 	url: example5url,
 	context: context5,
+	viewport: {
+		position: { x: 0, y: 0 },
+		dimensions: { width: 1024, height: 500 }
+	}
+});
+
+stream.write({
+	content: example7html,
+	url: example7url,
+	context: context7,
 	viewport: {
 		position: { x: 0, y: 0 },
 		dimensions: { width: 1024, height: 500 }

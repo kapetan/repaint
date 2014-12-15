@@ -7,21 +7,14 @@ var InlineBox = function(parent, style) {
 
 util.inherits(InlineBox, ParentBox);
 
-InlineBox.prototype.collapseWhitespace = function(strip) {
-	var box;
+InlineBox.prototype.addLine = function(child) {
 
-	this.children.forEach(function(child) {
-		box = child.collapseWhitespace(strip);
-		strip = box ? box.endsWithCollapsibleWhitespace() : strip;
-	});
-
-	return box;
 };
 
-InlineBox.prototype.layout = function(offset) {
+InlineBox.prototype.layout = function(offset, line) {
 	this._layoutWidth();
 	this._layoutPosition(offset);
-	this._layoutChildren();
+	this._layoutChildren(line);
 	this._layoutHeight();
 };
 
@@ -49,15 +42,15 @@ InlineBox.prototype._layoutPosition = function(offset) {
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 
 	this.position.x = parent.position.x + offset.width + this.leftWidth();
-	this.position.y = parent.position.y + this.topWidth();
+	this.position.y = parent.position.y;
 };
 
-InlineBox.prototype._layoutChildren = function() {
+InlineBox.prototype._layoutChildren = function(line) {
 	var self = this;
 	var offset = { width: 0, height: 0 };
 
 	this.children.forEach(function(child) {
-		child.layout(offset);
+		child.layout(offset, line);
 
 		self.dimensions.height = Math.max(self.dimensions.height, child.height());
 		offset.width += child.width();

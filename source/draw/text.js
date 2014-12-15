@@ -1,7 +1,13 @@
 var util = require('util');
 
 module.exports = function(box, context) {
-	context.font = util.format('%s %s', box.style['font-size'], box.style['font-family']);
-	context.fillStyle = box.style['color'].toString();
+	var style = box.style;
+
+	context.font = util.format('%s %s %s %s',
+		style['font-style'],
+		style['font-weight'],
+		style['font-size'],
+		style['font-family']);
+	context.fillStyle = style['color'].toString();
 	context.fillText(box.text, box.position.x, box.position.y + box.dimensions.height);
 };

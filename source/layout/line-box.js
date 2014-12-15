@@ -1,5 +1,7 @@
 var util = require('util');
+
 var ParentBox = require('./parent-box');
+var TextBox = require('./text-box');
 
 var LineBox = function(parent) {
 	ParentBox.call(this, parent);
@@ -7,17 +9,25 @@ var LineBox = function(parent) {
 
 util.inherits(LineBox, ParentBox);
 
-LineBox.prototype.collapseWhitespace = function() {
-	if(this.isCollapsibleWhitespace()) return this.detach();
+LineBox.prototype.flatten = function() {
+	var descedants = [];
+	var flatten = function(parent) {
+		descedants.push(parent);
+		if(parent.children) parent.children.forEach(flatten);
+	};
 
-	var box, strip = false;
+	this.children.forEach(flatten);
+	return descedants;
+};
 
-	this.children.forEach(function(child) {
-		box = child.collapseWhitespace(strip);
-		strip = box ? box.endsWithCollapsibleWhitespace() : strip;
+LineBox.prototype.texts = function() {
+	return this.flatten().filter(function(box) {
+		return box instanceof TextBox;
 	});
+};
 
-	return box;
+LineBox.prototype.addLine = function(child) {
+
 };
 
 LineBox.prototype.layout = function(offset) {
@@ -36,9 +46,9 @@ LineBox.prototype._layoutChildren = function() {
 	var offset = { width: 0, height: 0 };
 
 	this.children.forEach(function(child) {
-		child.layout(offset);
-		offset.height += child.width();
-		self.dimensions.height = Math.max(self.dimensions.height, child.height());
+		child.layout(offset, self);
+		offset.width += child.width();
+		self.dimensions.height = Math.max(self.dimensions.height, child.dimensions.height);
 	});
 };
 
