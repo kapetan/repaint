@@ -3,6 +3,8 @@ var util = require('util');
 var values = require('../css/values');
 var compute = require('../css/compute');
 var Box = require('./box');
+var ParentBox = require('./parent-box');
+var BlockBox = require('./block-box');
 
 var Length = values.Length;
 
@@ -31,5 +33,9 @@ Viewport.prototype.layout = function() {
 		offset.height += child.height();
 	});
 };
+
+Viewport.prototype.attach = ParentBox.prototype.attach;
+Viewport.prototype.detach = ParentBox.prototype.detach;
+Viewport.prototype.addLine = BlockBox.prototype.addLine;
 
 module.exports = Viewport;

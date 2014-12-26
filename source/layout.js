@@ -4,16 +4,19 @@ var values = require('./css/values');
 var Viewport = require('./layout/viewport');
 var BlockBox = require('./layout/block-box');
 var LineBox = require('./layout/line-box');
+var LineBreakBox = require('./layout/line-break-box');
 var InlineBox = require('./layout/inline-box');
 var TextBox = require('./layout/text-box');
 
 var None = values.Keyword.None;
 var Block = values.Keyword.Block;
 var Inline = values.Keyword.Inline;
+var LineBreak = values.Keyword.LineBreak;
 
 var isInlineLevelBox = function(box) {
 	return box instanceof InlineBox ||
-		box instanceof TextBox;
+		box instanceof TextBox ||
+		box instanceof LineBreakBox;
 };
 
 var isBlockLevelBox = function(box) {
@@ -28,17 +31,22 @@ var isBlockContainerBox = function(box) {
 };
 
 var branch = function(ancestor, descedant) {
-	var path = [];
+	var first, current;
 
 	while(descedant !== ancestor) {
-		path.push(descedant);
+		var d = descedant.clone();
+
+		if(current) d.attach(current);
+		if(!first) first = d;
+
+		current = d;
+
 		if(!descedant.parent) throw new Error('No ancestor match');
 		descedant = descedant.parent;
 	}
 
-	return path.reduceRight(function(acc, box) {
-		return box.clone(acc);
-	}, ancestor);
+	if(current) ancestor.attach(current);
+	return first;
 };
 
 var build = function(parent, nodes) {
@@ -55,6 +63,9 @@ var build = function(parent, nodes) {
 			}
 			if(Block.is(display)) {
 				box = new BlockBox(parent, style);
+			}
+			if(LineBreak.is(display)) {
+				box = new LineBreakBox(parent, style);
 			}
 
 			build(box, node.childNodes);
@@ -139,6 +150,31 @@ var collapseWhitespace = function(parent, boxes, strip) {
 	return strip;
 };
 
+var breaks = function(parent, boxes, ancestor) {
+	ancestor = ancestor || parent;
+
+	var resume;
+
+	boxes.forEach(function(child) {
+		var isBreak = child instanceof LineBreakBox;
+		var box;
+
+		if(isBreak) {
+			parent = branch(ancestor, parent);
+			resume = parent.parent;
+		} else {
+			box = child.clone(parent);
+		}
+
+		if(box && child.children) {
+			var a = isBlockContainerBox(box) ? box : ancestor;
+			parent = breaks(box, child.children, a) || parent;
+		}
+	});
+
+	return resume;
+};
+
 module.exports = function(html, viewport, context) {
 	viewport = new Viewport(viewport.position, viewport.dimensions);
 
@@ -147,7 +183,8 @@ module.exports = function(html, viewport, context) {
 	viewport = [
 		blocks,
 		lines,
-		collapseWhitespace
+		collapseWhitespace,
+		breaks,
 	].reduce(function(acc, fn) {
 		var a = acc.clone();
 		fn(a, acc.children);

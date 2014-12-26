@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Browser Test</title>
+
+	<style type="text/css">
+		iframe {
+			border: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.clearfix:before,
+		.clearfix:after {
+			content: " ";
+			display: table;
+		}
+		.clearfix:after {
+			clear: both;
+		}
+
+		.row {
+			margin-bottom: 8px;
+		}
+		.row .left-column, .row .right-column {
+			border: 1px solid black;
+		}
+		.row .left-column {
+			float: left;
+		}
+		.row .right-column {
+			float: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="container"></div>
+	<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

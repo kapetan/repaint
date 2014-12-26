@@ -1,7 +1,7 @@
 module.exports = function(str, options) {
 	options = options || {};
 
-	var format = options.format || 'normal';
+	var format = options.format || 'normal';
 	var strip = options.strip;
 
 	str = str.replace(/\r\n?/g, '\n');

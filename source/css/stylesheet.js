@@ -57,6 +57,8 @@ Stylesheet.parse = function(str, priority) {
 	var stylesheet = new Stylesheet(priority);
 
 	rules.forEach(function(r) {
+		if(r.type !== 'rule') return;
+
 		r.selectors.forEach(function(s) {
 			var rule = new Rule(s, r.position.start.line, stylesheet);
 			var order = 1;

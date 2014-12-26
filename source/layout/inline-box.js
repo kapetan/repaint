@@ -7,10 +7,6 @@ var InlineBox = function(parent, style) {
 
 util.inherits(InlineBox, ParentBox);
 
-InlineBox.prototype.addLine = function(child) {
-
-};
-
 InlineBox.prototype.layout = function(offset, line) {
 	this._layoutWidth();
 	this._layoutPosition(offset);
@@ -49,7 +45,7 @@ InlineBox.prototype._layoutChildren = function(line) {
 	var self = this;
 	var offset = { width: 0, height: 0 };
 
-	this.children.forEach(function(child) {
+	this.forEach(function(child) {
 		child.layout(offset, line);
 
 		self.dimensions.height = Math.max(self.dimensions.height, child.height());

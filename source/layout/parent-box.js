@@ -19,17 +19,67 @@ util.inherits(ParentBox, Box);
 
 ParentBox.prototype.layout = function() {};
 
+ParentBox.prototype.addLine = function(child, branch) {
+	this.stopEach();
+
+	var children = this.children.slice();
+	var box = this.clone();
+	box.attach(branch);
+
+	for(var i = children.indexOf(child) + 1; i < children.length; i++) {
+		box.attach(children[i]);
+	}
+
+	this.parent.addLine(this, box);
+};
+
 ParentBox.prototype.isCollapsibleWhitespace = function() {
 	return this.children.every(function(child) {
 		return child.isCollapsibleWhitespace();
 	});
 };
 
+ParentBox.prototype.attach = function(node, i) {
+	if(node.parent) node.parent.detach(node);
+
+	node.parent = this;
+
+	if(i !== undefined) this.children.splice(i, 0, node);
+	else this.children.push(node);
+};
+
+ParentBox.prototype.detach = function(node) {
+	var children = this.children;
+	var i = children.indexOf(node);
+
+	if(i < 0) return;
+
+	node.parent = null;
+	children.splice(i, 1);
+};
+
 ParentBox.prototype.clone = function(parent) {
 	var clone = new this.constructor(parent, this.style);
-	parent.children.push(clone);
+	if(parent) parent.children.push(clone);
 
 	return clone;
+};
+
+ParentBox.prototype.forEach = function(fn) {
+	var children = this.children;
+	var stop = false;
+
+	this._stop = function() {
+		stop = true;
+	};
+
+	for(var i = 0; i < children.length && !stop; i++) {
+		fn(children[i], i);
+	}
+};
+
+ParentBox.prototype.stopEach = function() {
+	if(this._stop) this._stop();
 };
 
 ParentBox.prototype.toPx = function(value) {

@@ -3,8 +3,8 @@ var util = require('util');
 var ParentBox = require('./parent-box');
 var TextBox = require('./text-box');
 
-var LineBox = function(parent) {
-	ParentBox.call(this, parent);
+var LineBox = function(parent, style) {
+	ParentBox.call(this, parent, style);
 };
 
 util.inherits(LineBox, ParentBox);
@@ -26,14 +26,10 @@ LineBox.prototype.texts = function() {
 	});
 };
 
-LineBox.prototype.addLine = function(child) {
-
-};
-
 LineBox.prototype.layout = function(offset) {
 	var parent = this.parent;
 
-	this.dimensions.width = parent.width();
+	this.dimensions.width = parent.dimensions.width;
 
 	this.position.x = parent.position.x;
 	this.position.y = parent.position.y + offset.height;
@@ -45,7 +41,7 @@ LineBox.prototype._layoutChildren = function() {
 	var self = this;
 	var offset = { width: 0, height: 0 };
 
-	this.children.forEach(function(child) {
+	this.forEach(function(child) {
 		child.layout(offset, self);
 		offset.width += child.width();
 		self.dimensions.height = Math.max(self.dimensions.height, child.dimensions.height);

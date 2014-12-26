@@ -4,8 +4,12 @@
   "description": "HTML rendering engine",
   "main": "source/index.js",
   "scripts": {
-    "build": "node build.js",
-    "watch": "node watch.js & node server.js"
+    "build": "browserify source/index.js -o dist/index.js",
+    "clean": "rm -rf dist/*",
+    "test-prepare": "rm -rf dist/tests && mkdir dist/tests",
+    "test-copy": "cp tests/index.html dist/tests/index.html",
+    "test-build": "npm run test-prepare && npm run test-copy && browserify tests/index.js -o dist/tests/index.js",
+    "test-watch": "npm run test-prepare && npm run test-copy && (onchange tests/index.html -- /bin/sh -c 'npm run test-copy' & watchify tests/index.js -v -d -o dist/tests/index.js & node server.js)"
   },
   "keywords": [
     "html",
@@ -31,12 +35,12 @@
     "text-width": "~1.1.0"
   },
   "devDependencies": {
-    "browserify": "~6.0.3",
-    "pump": "~1.0.0",
-    "chokidar": "~0.9.0",
     "brfs": "~1.2.0",
+    "browserify": "~6.0.3",
+    "onchange": "0.0.2",
     "root": "~1.1.0",
-    "send": "~0.9.3"
+    "send": "~0.9.3",
+    "watchify": "^2.2.1"
   },
   "browserify": {
     "transform": [

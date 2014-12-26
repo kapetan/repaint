@@ -17,6 +17,13 @@ var BlockBox = function(parent, style) {
 
 util.inherits(BlockBox, ParentBox);
 
+BlockBox.prototype.addLine = function(child, branch) {
+	var children = this.children;
+	var i = children.indexOf(child);
+
+	this.attach(branch, i + 1);
+};
+
 BlockBox.prototype.layout = function(offset) {
 	this._layoutWidth();
 	this._layoutPosition(offset);
@@ -118,7 +125,7 @@ BlockBox.prototype._layoutPosition = function(offset) {
 BlockBox.prototype._layoutChildren = function() {
 	var offset = { width: 0, height: 0 };
 
-	this.children.forEach(function(child) {
+	this.forEach(function(child) {
 		child.layout(offset);
 		offset.height += child.height();
 	});

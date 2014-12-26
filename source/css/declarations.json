@@ -1,7 +1,7 @@
 {
 	"display": {
 		"initial": "inline",
-		"values": ["inline", "block", "none"],
+		"values": ["inline", "block", "none", "line-break"],
 		"inherited": false
 	},
 	"text-align": {
@@ -41,7 +41,7 @@
 	},
 	"white-space": {
 		"initial": "normal",
-		"values": ["normal", "nowrap", "pre"],
+		"values": ["normal", "nowrap", "pre", "pre-wrap", "pre-line"],
 		"inherited": true
 	},
 	"background-color": {
