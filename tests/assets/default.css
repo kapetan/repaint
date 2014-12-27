@@ -1,0 +1,30 @@
+* {
+	display: inline;
+}
+
+html {
+	display: block;
+	font-size: 16px;
+	font-family: "Times New Roman";
+	line-height: 1.2;
+}
+
+head, link, style, meta, title, script {
+	display: none;
+}
+
+body {
+	display: block;
+	margin-top: 8px;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	margin-left: 8px;
+}
+
+div {
+	display: block;
+}
+
+br {
+	display: line-break;
+}

@@ -35,6 +35,7 @@ var branch = function(ancestor, descedant) {
 
 	while(descedant !== ancestor) {
 		var d = descedant.clone();
+		descedant.addLink(d);
 
 		if(current) d.attach(current);
 		if(!first) first = d;
@@ -92,7 +93,7 @@ var blocks = function(parent, boxes, ancestor) {
 			parent = branch(ancestor, parent);
 			resume = parent.parent;
 		} else {
-			box = child.clone(parent);
+			box = child.cloneWithLinks(parent);
 		}
 
 		if(child.children) {
@@ -118,10 +119,10 @@ var lines = function(parent, boxes) {
 				parent.children.push(line);
 			}
 
-			box = child.clone(line);
+			box = child.cloneWithLinks(line);
 		} else {
 			line = null;
-			box = child.clone(parent);
+			box = child.cloneWithLinks(parent);
 		}
 
 		if(child.children) lines(box, child.children);
@@ -141,7 +142,7 @@ var collapseWhitespace = function(parent, boxes, strip) {
 			box = child.collapseWhitespace(parent, strip);
 			strip = child.endsWithCollapsibleWhitespace();
 		} else {
-			box = child.clone(parent);
+			box = child.cloneWithLinks(parent);
 		}
 
 		if(child.children) strip = collapseWhitespace(box, child.children, strip);
@@ -163,7 +164,7 @@ var breaks = function(parent, boxes, ancestor) {
 			parent = branch(ancestor, parent);
 			resume = parent.parent;
 		} else {
-			box = child.clone(parent);
+			box = child.cloneWithLinks(parent);
 		}
 
 		if(box && child.children) {

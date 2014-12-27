@@ -22,7 +22,10 @@ assets[url('multiline.html')] = fs.readFileSync(__dirname + '/assets/multiline.h
 assets[url('br.html')] = fs.readFileSync(__dirname + '/assets/br.html', 'utf-8');
 assets[url('block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/block-in-inline.html', 'utf-8');
 assets[url('nested-block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/nested-block-in-inline.html', 'utf-8');
+assets[url('padded-block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-block-in-inline.html', 'utf-8');
 assets[url('padded-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-inline.html', 'utf-8');
+assets[url('padded-br.html')] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
+assets[url('padded-all.html')] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
 
 var canvas = function(element, options) {
 	var canvas = document.createElement('canvas');

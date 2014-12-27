@@ -13,11 +13,21 @@ var ParentBox = function(parent, style) {
 	this.style = style || compute({}, parent.style);
 	this.parent = parent;
 	this.children = [];
+
+	this.leftLink = false;
+	this.rightLink = false;
 };
 
 util.inherits(ParentBox, Box);
 
 ParentBox.prototype.layout = function() {};
+
+ParentBox.prototype.addLink = function(box) {
+	box.leftLink = true;
+	box.rightLink = this.rightLink;
+
+	this.rightLink = true;
+};
 
 ParentBox.prototype.addLine = function(child, branch) {
 	this.stopEach();
@@ -30,6 +40,7 @@ ParentBox.prototype.addLine = function(child, branch) {
 		box.attach(children[i]);
 	}
 
+	this.addLink(box);
 	this.parent.addLine(this, box);
 };
 
@@ -61,6 +72,14 @@ ParentBox.prototype.detach = function(node) {
 ParentBox.prototype.clone = function(parent) {
 	var clone = new this.constructor(parent, this.style);
 	if(parent) parent.children.push(clone);
+
+	return clone;
+};
+
+ParentBox.prototype.cloneWithLinks = function(parent) {
+	var clone = this.clone(parent);
+	clone.leftLink = this.leftLink;
+	clone.rightLink = this.rightLink;
 
 	return clone;
 };

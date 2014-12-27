@@ -15,16 +15,20 @@ InlineBox.prototype.layout = function(offset, line) {
 };
 
 InlineBox.prototype._layoutWidth = function() {
+	var self = this;
 	var style = this.style;
 
-	this.margin.left = this.toPx(style['margin-left']);
-	this.margin.right = this.toPx(style['margin-right']);
+	var iif = function(direction, value) {
+		return self[direction + 'Link'] ? 0 : self.toPx(value);
+	};
 
-	this.border.left = this.toPx(this.styledBorderWidth('left'));
-	this.border.right = this.toPx(this.styledBorderWidth('right'));
+	this.margin.left = iif('left', style['margin-left']);
+	this.border.left = iif('left', this.styledBorderWidth('left'));
+	this.padding.left = iif('left', style['padding-left']);
 
-	this.padding.left = this.toPx(style['padding-left']);
-	this.padding.right = this.toPx(style['padding-right']);
+	this.margin.right = iif('right', style['margin-right']);
+	this.border.right = iif('right', this.styledBorderWidth('right'));
+	this.padding.right = iif('right', style['padding-right']);
 };
 
 InlineBox.prototype._layoutPosition = function(offset) {
@@ -52,6 +56,7 @@ InlineBox.prototype._layoutChildren = function(line) {
 		offset.width += child.width();
 	});
 
+	this._layoutWidth();
 	this.dimensions.width = offset.width;
 };
 

@@ -53,6 +53,9 @@ var TextBox = function(styleOrParent, text) {
 	Box.call(this, style);
 	this.parent = parent;
 	this.text = text;
+
+	this.leftLink = false;
+	this.rightLink = false;
 };
 
 util.inherits(TextBox, Box);
@@ -151,6 +154,8 @@ TextBox.prototype.clone = function(parent) {
 	return clone;
 };
 
+TextBox.prototype.cloneWithLinks = ParentBox.prototype.cloneWithLinks;
+TextBox.prototype.addLink = ParentBox.prototype.addLink;
 TextBox.prototype.toPx = ParentBox.prototype.toPx;
 
 TextBox.prototype._isCollapsible = function() {
