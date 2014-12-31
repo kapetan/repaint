@@ -1,9 +1,12 @@
 var util = require('util');
 var fs = require('fs');
 var extend = require('xtend');
+var qs = require('querystring');
 
 var serialize = require('../source/serialize');
 var render = require('../')();
+
+var query = qs.parse(window.location.search.replace(/^\?/, ''));
 
 var url = function(path) {
 	var loc = window.location;
@@ -26,6 +29,7 @@ assets[url('padded-block-in-inline.html')] = fs.readFileSync(__dirname + '/asset
 assets[url('padded-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-inline.html', 'utf-8');
 assets[url('padded-br.html')] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
 assets[url('padded-all.html')] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
+assets[url('font-size.html')] = fs.readFileSync(__dirname + '/assets/font-size.html', 'utf-8');
 
 var canvas = function(element, options) {
 	var canvas = document.createElement('canvas');
@@ -59,12 +63,24 @@ var row = function(element, options) {
 	var row = document.createElement('div');
 	row.className = 'row clearfix';
 
+	var top = document.createElement('div');
+	top.className = 'top';
+
+	var name = options.url.split('/').pop();
+	var content = document.createTextNode(name);
+	var link = document.createElement('a');
+	link.href = window.location.pathname + '?name=' + encodeURIComponent(name);
+
+	link.appendChild(content);
+	top.appendChild(link);
+
 	var left = document.createElement('div');
 	left.className = 'left-column';
 
 	var right = document.createElement('div');
 	right.className = 'right-column';
 
+	row.appendChild(top);
 	row.appendChild(left);
 	row.appendChild(right);
 
@@ -76,12 +92,14 @@ var row = function(element, options) {
 
 var container = document.getElementById('container');
 
-Object.keys(assets).forEach(function(url) {
-	var data = assets[url];
+Object.keys(assets).forEach(function(asset) {
+	if(query.name && url(query.name) !== asset) return;
+
+	var data = assets[asset];
 	data = Array.isArray(data) ? data : [data, 512, 256];
 
 	row(container, {
-		url: url,
+		url: asset,
 		content: data[0],
 		viewport: {
 			position: { x: 0, y: 0 },
@@ -91,6 +109,7 @@ Object.keys(assets).forEach(function(url) {
 });
 
 render.on('data', function(page) {
+	console.log('--', page.url);
 	console.log(serialize(page.layout));
 });
 
