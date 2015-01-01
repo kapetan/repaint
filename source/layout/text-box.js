@@ -60,24 +60,6 @@ var TextBox = function(styleOrParent, text) {
 
 util.inherits(TextBox, Box);
 
-TextBox.prototype.endsWithCollapsibleWhitespace = function() {
-	var text = collapse(this.text, { format: this.style['white-space'].keyword });
-	return / $/.test(text) && this._isCollapsible();
-};
-
-TextBox.prototype.collapseWhitespace = function(parent, strip) {
-	var format = this.style['white-space'].keyword;
-	var text = collapse(this.text, {
-		format: format,
-		strip: strip
-	});
-
-	var clone = new TextBox(parent, text);
-	parent.children.push(clone);
-
-	return clone;
-};
-
 TextBox.prototype.layout = function(offset, line) {
 	var parent = this.parent;
 	var style = this.style;
@@ -137,6 +119,24 @@ TextBox.prototype.layout = function(offset, line) {
 	this.position.y = parent.position.y;
 
 	this.text = text.normalized;
+};
+
+TextBox.prototype.endsWithCollapsibleWhitespace = function() {
+	var text = collapse(this.text, { format: this.style['white-space'].keyword });
+	return / $/.test(text) && this._isCollapsible();
+};
+
+TextBox.prototype.collapseWhitespace = function(parent, strip) {
+	var format = this.style['white-space'].keyword;
+	var text = collapse(this.text, {
+		format: format,
+		strip: strip
+	});
+
+	var clone = new TextBox(parent, text);
+	parent.children.push(clone);
+
+	return clone;
 };
 
 TextBox.prototype.isCollapsibleWhitespace = function() {

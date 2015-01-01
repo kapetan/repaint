@@ -3,6 +3,7 @@ var BlockBox = require('./layout/block-box');
 var LineBox = require('./layout/line-box');
 var InlineBox = require('./layout/inline-box');
 var TextBox = require('./layout/text-box');
+var ImageBox = require('./layout/image-box');
 
 var indent = function(i) {
 	return (new Array(i + 1)).join('|    ');
@@ -14,6 +15,8 @@ var name = function(box) {
 	if(box instanceof LineBox) return 'LineBox';
 	if(box instanceof InlineBox) return 'InlineBox';
 	if(box instanceof TextBox) return 'TextBox';
+	if(box instanceof ImageBox.Block) return 'BlockImageBox';
+	if(box instanceof ImageBox.Inline) return 'InlineImageBox';
 };
 
 var attributes = function(box) {
@@ -31,6 +34,7 @@ var toString = function(box, indentation) {
 	var space = indent(indentation);
 
 	if(box instanceof TextBox) return [space, name(box), attributes(box), '[', JSON.stringify(box.text), ']'].join('');
+	if(box instanceof ImageBox) return [space, name(box), attributes(box), '[', JSON.stringify(box.image.src), ']'].join('');
 
 	var children = box.children
 		.map(function(child) {

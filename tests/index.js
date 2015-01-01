@@ -30,6 +30,10 @@ assets[url('padded-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-
 assets[url('padded-br.html')] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
 assets[url('padded-all.html')] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
 assets[url('font-size.html')] = fs.readFileSync(__dirname + '/assets/font-size.html', 'utf-8');
+assets[url('image.html')] = fs.readFileSync(__dirname + '/assets/image.html', 'utf-8');
+assets[url('inline-image.html')] = fs.readFileSync(__dirname + '/assets/inline-image.html', 'utf-8');
+assets[url('block-image.html')] = fs.readFileSync(__dirname + '/assets/block-image.html', 'utf-8');
+assets[url('multiline-image.html')] = fs.readFileSync(__dirname + '/assets/multiline-image.html', 'utf-8');
 
 var canvas = function(element, options) {
 	var canvas = document.createElement('canvas');

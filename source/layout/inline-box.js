@@ -46,13 +46,10 @@ InlineBox.prototype._layoutPosition = function(offset) {
 };
 
 InlineBox.prototype._layoutChildren = function(line) {
-	var self = this;
 	var offset = { width: 0, height: 0 };
 
 	this.forEach(function(child) {
 		child.layout(offset, line);
-
-		self.dimensions.height = Math.max(self.dimensions.height, child.height());
 		offset.width += child.width();
 	});
 

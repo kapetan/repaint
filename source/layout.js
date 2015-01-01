@@ -7,6 +7,7 @@ var LineBox = require('./layout/line-box');
 var LineBreakBox = require('./layout/line-break-box');
 var InlineBox = require('./layout/inline-box');
 var TextBox = require('./layout/text-box');
+var ImageBox = require('./layout/image-box');
 
 var None = values.Keyword.None;
 var Block = values.Keyword.Block;
@@ -16,13 +17,20 @@ var LineBreak = values.Keyword.LineBreak;
 var isInlineLevelBox = function(box) {
 	return box instanceof InlineBox ||
 		box instanceof TextBox ||
-		box instanceof LineBreakBox;
+		box instanceof LineBreakBox ||
+		box instanceof ImageBox.Inline;
+};
+
+var isInlineContainerBox = function(box) {
+	return box instanceof InlineBox ||
+		box instanceof LineBox;
 };
 
 var isBlockLevelBox = function(box) {
 	return box instanceof Viewport ||
 		box instanceof LineBox ||
-		box instanceof BlockBox;
+		box instanceof BlockBox ||
+		box instanceof ImageBox.Block;
 };
 
 var isBlockContainerBox = function(box) {
@@ -58,14 +66,18 @@ var build = function(parent, nodes) {
 			var style = node.style;
 			var display = style.display;
 
-			if(None.is(display)) return;
-			if(Inline.is(display)) {
+			if(None.is(display)) {
+				return;
+			} else if(node.name === 'img') {
+				var image = node.image;
+
+				if(Block.is(display)) box = new ImageBox.Block(parent, style, image);
+				else box = new ImageBox.Inline(parent, style, image);
+			} else if(Inline.is(display)) {
 				box = new InlineBox(parent, style);
-			}
-			if(Block.is(display)) {
+			} else if(Block.is(display)) {
 				box = new BlockBox(parent, style);
-			}
-			if(LineBreak.is(display)) {
+			} else if(LineBreak.is(display)) {
 				box = new LineBreakBox(parent, style);
 			}
 
@@ -81,7 +93,7 @@ var build = function(parent, nodes) {
 var blocks = function(parent, boxes, ancestor) {
 	ancestor = ancestor || parent;
 
-	var isInline = isInlineLevelBox(parent);
+	var isInline = isInlineContainerBox(parent);
 	var resume;
 
 	boxes.forEach(function(child) {

@@ -34,17 +34,18 @@ BlockBox.prototype.layout = function(offset) {
 BlockBox.prototype._layoutWidth = function() {
 	var self = this;
 	var parent = this.parent;
+	var style = this.style;
 
-	var width = this.style.width;
+	var width = style.width;
 
-	var marginLeft = this.style['margin-left'];
-	var marginRight = this.style['margin-right'];
+	var marginLeft = style['margin-left'];
+	var marginRight = style['margin-right'];
 
 	var borderLeft = this.styledBorderWidth('left');
 	var borderRight = this.styledBorderWidth('right');
 
-	var paddingLeft = this.style['padding-left'];
-	var paddingRight = this.style['padding-right'];
+	var paddingLeft = style['padding-left'];
+	var paddingRight = style['padding-right'];
 
 	var total = [
 		width,
@@ -118,7 +119,7 @@ BlockBox.prototype._layoutPosition = function(offset) {
 	this.padding.top = this.toPx(style['padding-top']);
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 
-	this.position.x = parent.position.x + this.margin.left + this.border.left + this.padding.left;
+	this.position.x = parent.position.x + this.leftWidth();
 	this.position.y = parent.position.y + offset.height + this.topWidth();
 };
 
