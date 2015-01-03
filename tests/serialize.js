@@ -1,9 +1,9 @@
-var Viewport = require('./layout/viewport');
-var BlockBox = require('./layout/block-box');
-var LineBox = require('./layout/line-box');
-var InlineBox = require('./layout/inline-box');
-var TextBox = require('./layout/text-box');
-var ImageBox = require('./layout/image-box');
+var Viewport = require('../source/layout/viewport');
+var BlockBox = require('../source/layout/block-box');
+var LineBox = require('../source/layout/line-box');
+var InlineBox = require('../source/layout/inline-box');
+var TextBox = require('../source/layout/text-box');
+var ImageBox = require('../source/layout/image-box');
 
 var indent = function(i) {
 	return (new Array(i + 1)).join('|    ');

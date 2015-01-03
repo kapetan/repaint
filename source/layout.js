@@ -188,7 +188,7 @@ var breaks = function(parent, boxes, ancestor) {
 	return resume;
 };
 
-module.exports = function(html, viewport, context) {
+module.exports = function(html, viewport) {
 	viewport = new Viewport(viewport.position, viewport.dimensions);
 
 	build(viewport, html);

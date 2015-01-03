@@ -1,10 +1,9 @@
 var util = require('util');
 var fs = require('fs');
-var extend = require('xtend');
 var qs = require('querystring');
 
-var serialize = require('../source/serialize');
-var render = require('../')();
+var serialize = require('./serialize');
+var render = require('../');
 
 var query = qs.parse(window.location.search.replace(/^\?/, ''));
 
@@ -36,7 +35,7 @@ assets[url('inline-image.html')] = fs.readFileSync(__dirname + '/assets/inline-i
 assets[url('block-image.html')] = fs.readFileSync(__dirname + '/assets/block-image.html', 'utf-8');
 assets[url('multiline-image.html')] = fs.readFileSync(__dirname + '/assets/multiline-image.html', 'utf-8');
 
-var canvas = function(element, options) {
+var canvas = function(element, options, callback) {
 	var canvas = document.createElement('canvas');
 	var dimensions = options.viewport.dimensions;
 
@@ -46,7 +45,7 @@ var canvas = function(element, options) {
 	element.appendChild(canvas);
 	options.context = canvas.getContext('2d');
 
-	render.write(options);
+	render(options, callback);
 };
 
 var iframe = function(element, options) {
@@ -91,8 +90,13 @@ var row = function(element, options) {
 
 	element.appendChild(row);
 
-	canvas(left, options);
 	iframe(right, options);
+	canvas(left, options, function(err, page) {
+		if(err) throw err;
+
+		console.log('--', page.url);
+		console.log(serialize(page.layout));
+	});
 };
 
 var container = document.getElementById('container');
@@ -112,10 +116,3 @@ Object.keys(assets).forEach(function(asset) {
 		}
 	});
 });
-
-render.on('data', function(page) {
-	console.log('--', page.url);
-	console.log(serialize(page.layout));
-});
-
-render.end();
