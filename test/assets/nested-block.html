@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/tests/assets/reset.css">
-	<link rel="stylesheet" type="text/css" href="/tests/assets/default.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/reset.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
 
 	<style type="text/css">
-		.inline {
+		.block {
 			border-top-style: solid;
 			border-right-style: solid;
 			border-bottom-style: solid;
@@ -21,42 +21,38 @@
 			border-bottom-color: #800080;
 			border-left-color: #800080;
 
-			padding-top: 5px;
-			padding-right: 5px;
-			padding-bottom: 5px;
-			padding-left: 5px;
+			padding-top: 10px;
+			padding-right: 10px;
+			padding-bottom: 10px;
+			padding-left: 10px;
 		}
 
-		.inline-1 {
+		.block-1 {
 			background-color: #ff0000;
 		}
-		.inline-2 {
+		.block-2 {
 			background-color: #ffa500;
 		}
-		.inline-3 {
+		.block-3 {
 			background-color: #ffff00;
 		}
-		.inline-4 {
+		.block-4 {
 			background-color: #008000;
 		}
-		.inline-5 {
+		.block-5 {
 			background-color: #0000ff;
 		}
 	</style>
 </head>
 <body>
-	<span class="inline inline-1">
-		H
-		<span class="inline inline-2">
-			e
-			<span class="inline inline-3">
-				l
-				<span class="inline inline-4">
-					l
-					<span class="inline inline-5">o</span>
-				</span>
-			</span>
-		</span>
-	</span>
+	<div class="block block-1">
+		<div class="block block-2">
+			<div class="block block-3">
+				<div class="block block-4">
+					<div class="block block-5"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

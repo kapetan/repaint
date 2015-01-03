@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/tests/assets/reset.css">
-	<link rel="stylesheet" type="text/css" href="/tests/assets/default.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/reset.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
 
 	<style type="text/css">
-		.block {
+		.inline {
 			border-top-style: solid;
 			border-right-style: solid;
 			border-bottom-style: solid;
@@ -21,38 +21,39 @@
 			border-bottom-color: #800080;
 			border-left-color: #800080;
 
-			padding-top: 10px;
-			padding-right: 10px;
-			padding-bottom: 10px;
-			padding-left: 10px;
+			padding-top: 5px;
+			padding-right: 5px;
+			padding-bottom: 5px;
+			padding-left: 5px;
 		}
 
-		.block-1 {
+		.outer {
 			background-color: #ff0000;
 		}
-		.block-2 {
+		.inline-1 {
 			background-color: #ffa500;
 		}
-		.block-3 {
+		.inline-2 {
 			background-color: #ffff00;
 		}
-		.block-4 {
+		.inline-3 {
 			background-color: #008000;
 		}
-		.block-5 {
+		.inline-4 {
 			background-color: #0000ff;
+		}
+		.inline-5 {
+			background-color: #4b0082;
 		}
 	</style>
 </head>
 <body>
-	<div class="block block-1">
-		<div class="block block-2">
-			<div class="block block-3">
-				<div class="block block-4">
-					<div class="block block-5"></div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<span class="inline outer">
+		<span class="inline inline-1">H</span>
+		<span class="inline inline-2">e</span>
+		<span class="inline inline-3">l</span>
+		<span class="inline inline-4">l</span>
+		<span class="inline inline-5">o</span>
+	</span>
 </body>
 </html>

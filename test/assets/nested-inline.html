@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/tests/assets/reset.css">
-	<link rel="stylesheet" type="text/css" href="/tests/assets/default.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/reset.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
 
 	<style type="text/css">
 		.inline {
@@ -25,26 +25,38 @@
 			padding-right: 5px;
 			padding-bottom: 5px;
 			padding-left: 5px;
-
-			margin-right: 5px;
-			margin-left: 5px;
-
-			background-color: #ffa500;
 		}
 
-		.outer {
-			width: 50%;
+		.inline-1 {
 			background-color: #ff0000;
+		}
+		.inline-2 {
+			background-color: #ffa500;
+		}
+		.inline-3 {
+			background-color: #ffff00;
+		}
+		.inline-4 {
+			background-color: #008000;
+		}
+		.inline-5 {
+			background-color: #0000ff;
 		}
 	</style>
 </head>
 <body>
-	<div class="outer">
-		<span class="inline">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			<div>Donec ac convallis nisi.</div>
-			Mauris fermentum est nec placerat tincidunt.
+	<span class="inline inline-1">
+		H
+		<span class="inline inline-2">
+			e
+			<span class="inline inline-3">
+				l
+				<span class="inline inline-4">
+					l
+					<span class="inline inline-5">o</span>
+				</span>
+			</span>
 		</span>
-	</div>
+	</span>
 </body>
 </html>

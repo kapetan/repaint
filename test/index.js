@@ -9,7 +9,7 @@ var query = qs.parse(window.location.search.replace(/^\?/, ''));
 
 var url = function(path) {
 	var loc = window.location;
-	return util.format('%s//%s/tests/assets/%s', loc.protocol, loc.host, path);
+	return util.format('%s//%s/test/assets/%s', loc.protocol, loc.host, path);
 };
 
 var assets = {};

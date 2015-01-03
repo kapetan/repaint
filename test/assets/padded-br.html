@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="/tests/assets/reset.css">
-	<link rel="stylesheet" type="text/css" href="/tests/assets/default.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/reset.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
 
 	<style type="text/css">
-		.outer {
-			background-color: #ff0000;
-		}
-		.outer img {
-			margin-left: 10px;
-			margin-right: 10px;
-
+		.inline {
 			border-top-style: solid;
 			border-right-style: solid;
 			border-bottom-style: solid;
@@ -32,16 +26,25 @@
 			padding-bottom: 5px;
 			padding-left: 5px;
 
-			display: block;
+			margin-right: 5px;
+			margin-left: 5px;
+
 			background-color: #ffa500;
+		}
+
+		.outer {
+			width: 50%;
+			background-color: #ff0000;
 		}
 	</style>
 </head>
 <body>
-	<span class="outer">
-		<span class="inline-1">Lorem ipsum dolor sit amet</span>
-		<img src="/tests/assets/waves.png">
-		<span class="inline-2">consectetur adipiscing elit.</span>
-	</span>
+	<div class="outer">
+		<span class="inline">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			<br>
+			Mauris fermentum est nec placerat tincidunt.
+		</span>
+	</div>
 </body>
 </html>
