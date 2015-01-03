@@ -18,6 +18,7 @@ assets[url('simple-block.html')] = fs.readFileSync(__dirname + '/assets/simple-b
 assets[url('nested-block.html')] = fs.readFileSync(__dirname + '/assets/nested-block.html', 'utf-8');
 assets[url('stack-block.html')] = fs.readFileSync(__dirname + '/assets/stack-block.html', 'utf-8');
 assets[url('simple-inline.html')] = fs.readFileSync(__dirname + '/assets/simple-inline.html', 'utf-8');
+assets[url('empty-inline.html')] = fs.readFileSync(__dirname + '/assets/empty-inline.html', 'utf-8');
 assets[url('nested-inline.html')] = fs.readFileSync(__dirname + '/assets/nested-inline.html', 'utf-8');
 assets[url('column-inline.html')] = fs.readFileSync(__dirname + '/assets/column-inline.html', 'utf-8');
 assets[url('white-space.html')] = [fs.readFileSync(__dirname + '/assets/white-space.html', 'utf-8'), 512, 768];
