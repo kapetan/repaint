@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/test/assets/reset.css">
+	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
+
+	<style type="text/css">
+		.outer {
+			background-color: #ff0000;
+		}
+		.inline-1 {
+			background-color: #ffa500;
+		}
+		.inline-2 {
+			white-space: pre;
+			background-color: #ffff00;
+		}
+		.inline-3 {
+			background-color: #008000;
+		}
+		.inline-4 {
+			white-space: pre;
+			background-color: #0000ff;
+		}
+		.inline-5 {
+			background-color: #4b0082;
+		}
+	</style>
+</head>
+<body>
+	<div class="outer">
+		<span class="inline-1">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
+		</span>
+		<span class="inline-2"> </span>
+		<span class="inline-3">
+			Nunc non risus gravida, pharetra felis et, scelerisque lacus.<br>
+		</span>
+		<span class="inline-4"></span>
+		<span class="inline-5">
+			Suspendisse lacinia sit amet est id ornare.
+		</span>
+	</div>
+
+	<div class="outer">
+		<span class="inline-2"> </span>
+		<span class="inline-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac convallis nisi. Mauris fermentum est nec placerat tincidunt.</span>
+	</div>
+</body>
+</html>

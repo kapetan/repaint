@@ -28,6 +28,8 @@ Viewport.prototype.clone = function() {
 Viewport.prototype.layout = function() {
 	var offset = { width: 0, height: 0 };
 
+	this.collapseWhitespace(false);
+
 	this.children.forEach(function(child) {
 		child.layout(offset);
 		offset.height += child.height();
@@ -36,6 +38,8 @@ Viewport.prototype.layout = function() {
 
 Viewport.prototype.attach = ParentBox.prototype.attach;
 Viewport.prototype.detach = ParentBox.prototype.detach;
+Viewport.prototype.collapseWhitespace = ParentBox.prototype.collapseWhitespace;
+Viewport.prototype.addLink = ParentBox.prototype.addLink;
 Viewport.prototype.addLine = BlockBox.prototype.addLine;
 
 module.exports = Viewport;

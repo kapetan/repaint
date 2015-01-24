@@ -5,19 +5,26 @@
 	<link rel="stylesheet" type="text/css" href="/test/assets/default.css">
 
 	<style type="text/css">
-		.outer {
+		.outer-inline {
 			background-color: #ff0000;
 		}
-		.outer img {
+		.outer-inline img {
 			margin-left: 15px;
+		}
+		.outer-block {
+			background-color: #ffa500;
 		}
 	</style>
 </head>
 <body>
-	<span class="outer">
+	<span class="outer-inline">
 		<span class="inline-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
 		<img src="/test/assets/waves.png">
 		<span class="inline-2">Donec ac convallis nisi.</span>
 	</span>
+
+	<div class="outer-block">
+		Mauris fermentum est nec placerat tincidunt.
+	</div>
 </body>
 </html>

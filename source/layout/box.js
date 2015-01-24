@@ -12,6 +12,24 @@ var Widths = function() {
 	this.left = 0;
 };
 
+Widths.prototype.some = function() {
+	return [
+		this.top,
+		this.right,
+		this.bottom,
+		this.left
+	].some(function(v) {
+		return v !== 0;
+	});
+};
+
+Widths.prototype.reset = function() {
+	this.top =
+	this.right =
+	this.bottom =
+	this.left = 0;
+};
+
 var Box = function(style) {
 	this.style = style;
 

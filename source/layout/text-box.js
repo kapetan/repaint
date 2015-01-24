@@ -50,9 +50,12 @@ var TextBox = function(styleOrParent, text) {
 	var parent = isParent ? styleOrParent : null;
 	var style = isParent ? styleOrParent.style : styleOrParent;
 
+	text = text || '';
+
 	Box.call(this, style);
 	this.parent = parent;
 	this.text = text;
+	this.display = text;
 
 	this.leftLink = false;
 	this.rightLink = false;
@@ -64,17 +67,19 @@ TextBox.prototype.layout = function(offset, line) {
 	var parent = this.parent;
 	var style = this.style;
 	var format = style['white-space'].keyword;
-	var position = this._textPosition(line);
+	var textContext = this._textContext(line);
 	var lines = breaks.hard(this.text, format);
-	var text = new TextString(lines[0], style);
 
-	var isFirst = position.first;
-	var isLast = position.last;
+	var textString = function(t) {
+		return new TextString(t || '', style);
+	};
+
+	var text = textString(lines[0]);
 	var isCollapsible = this._isCollapsible();
 	var isMultiline = lines.length > 1;
 
-	if(isCollapsible && isFirst) text.trimLeft();
-	if(isCollapsible && (isLast || isMultiline)) text.trimRight();
+	if(isCollapsible && textContext.precededByEmpty) text.trimLeft();
+	if(isCollapsible && (textContext.followedByEmpty || isMultiline)) text.trimRight();
 
 	var x = parent.position.x + offset.width;
 	var available = line.position.x + line.dimensions.width - x;
@@ -82,24 +87,24 @@ TextBox.prototype.layout = function(offset, line) {
 
 	if(available < 0) {
 		rest = this.text;
-		text = new TextString('', style);
+		text = textString();
 	} else if(text.width() > available) {
 		var i = 0;
 		var words = breaks.soft(text.original, format);
-		var fillCurrent, fillNext = new TextString(words[i], style);
+		var fillCurrent, fillNext = textString(words[i]);
 
 		while(fillNext.width() <= available && i++ < words.length) {
 			fillCurrent = fillNext;
 			fillNext = fillNext.append(words[i]);
 		}
 
-		if(!fillCurrent && isFirst) fillCurrent = new TextString(words[0], style);
-		else if(!fillCurrent) fillCurrent = new TextString('', style);
+		if(!fillCurrent && textContext.first) fillCurrent = textString(words[0]);
+		else if(!fillCurrent) fillCurrent = textString();
 
-		if(isCollapsible && isFirst) fillCurrent.trimLeft();
+		if(isCollapsible && textContext.precededByEmpty) fillCurrent.trimLeft();
 		if(isCollapsible) fillCurrent.trimRight();
 
-		var newline = fillCurrent.original.length === text.original.length ? 1 : 0;
+		var newline = fillCurrent.original === text.original ? 1 : 0;
 
 		rest = this.text.slice(fillCurrent.original.length + newline);
 		text = fillCurrent;
@@ -108,8 +113,9 @@ TextBox.prototype.layout = function(offset, line) {
 	}
 
 	if(rest || isMultiline) {
-		var textBox = new TextBox(style, rest);
+		var textBox = rest === this.text ? null : new TextBox(style, rest);
 		parent.addLine(this, textBox);
+		if(!textBox) return;
 	}
 
 	this.dimensions.height = this.toPx(style['font-size']);
@@ -118,7 +124,7 @@ TextBox.prototype.layout = function(offset, line) {
 	this.position.x = x;
 	this.position.y = parent.position.y;
 
-	this.text = text.normalized;
+	this.display = text.normalized;
 };
 
 TextBox.prototype.endsWithCollapsibleWhitespace = function() {
@@ -126,25 +132,19 @@ TextBox.prototype.endsWithCollapsibleWhitespace = function() {
 	return / $/.test(text) && this._isCollapsible();
 };
 
-TextBox.prototype.collapseWhitespace = function(parent, strip) {
-	var format = this.style['white-space'].keyword;
+TextBox.prototype.collapseWhitespace = function(strip) {
+	var wh = this.endsWithCollapsibleWhitespace();
 	var text = collapse(this.text, {
-		format: format,
+		format: this.style['white-space'].keyword,
 		strip: strip
 	});
 
-	var clone = new TextBox(parent, text);
-	parent.children.push(clone);
-
-	return clone;
+	this.text = text;
+	return wh;
 };
 
-TextBox.prototype.isCollapsibleWhitespace = function() {
-	return this._isWhitespace() && this._isCollapsible();
-};
-
-TextBox.prototype.isEmpty = function() {
-	return !this.text.length;
+TextBox.prototype.hasContent = function() {
+	return !(this._isWhitespace() && this._isCollapsible());
 };
 
 TextBox.prototype.clone = function(parent) {
@@ -167,27 +167,23 @@ TextBox.prototype._isWhitespace = function() {
 	return /^[\t\n\r ]*$/.test(this.text);
 };
 
-TextBox.prototype._textWidth = function(size, text) {
-	var style = this.style;
-
-	return textWidth(text, {
-		size: size,
-		family: style['font-family'].keyword,
-		weight: style['font-weight'].keyword,
-		style: style['font-style'].keyword
-	});
-};
-
-TextBox.prototype._textPosition = function(line) {
-	var texts = line.texts().filter(function(t) {
-		return !t.isEmpty();
-	});
-
+TextBox.prototype._textContext = function(line) {
+	var texts = line.texts();
 	var i = texts.indexOf(this);
+	var precededByEmpty = true;
+	var followedByEmpty = true;
+
+	for(var j = 0; j < texts.length; j++) {
+		var empty = !texts[j].text.length;
+		if(j < i) precededByEmpty = precededByEmpty && empty;
+		if(j > i) followedByEmpty = followedByEmpty && empty;
+	}
 
 	return {
 		first: i === 0,
-		last: i >= 0 && i === (texts.length - 1)
+		last: i === (texts.length - 1),
+		precededByEmpty: precededByEmpty,
+		followedByEmpty: followedByEmpty
 	};
 };
 

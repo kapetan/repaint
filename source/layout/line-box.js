@@ -26,6 +26,10 @@ LineBox.prototype.texts = function() {
 	});
 };
 
+LineBox.prototype.addLine = function(child, branch) {
+	ParentBox.prototype.addLine.call(this, child, branch, true);
+};
+
 LineBox.prototype.layout = function(offset) {
 	var parent = this.parent;
 
@@ -37,6 +41,10 @@ LineBox.prototype.layout = function(offset) {
 	this._layoutChildren();
 };
 
+LineBox.prototype.collapseWhitespace = function() {
+	return ParentBox.prototype.collapseWhitespace.call(this, false);
+};
+
 LineBox.prototype._layoutChildren = function() {
 	var self = this;
 	var offset = { width: 0, height: 0 };
@@ -46,6 +54,8 @@ LineBox.prototype._layoutChildren = function() {
 		offset.width += child.width();
 		self.dimensions.height = Math.max(self.dimensions.height, child.dimensions.height);
 	});
+
+	if(!this.hasContent()) this.dimensions.height = 0;
 };
 
 module.exports = LineBox;

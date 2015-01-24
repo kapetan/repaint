@@ -10,5 +10,5 @@ module.exports = function(box, context) {
 		style['font-family']);
 	context.textBaseline = 'bottom';
 	context.fillStyle = style['color'].toString();
-	context.fillText(box.text, box.position.x, box.position.y + box.dimensions.height);
+	context.fillText(box.display, box.position.x, box.position.y + box.dimensions.height);
 };

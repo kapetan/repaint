@@ -21,6 +21,7 @@ assets[url('empty-inline.html')] = fs.readFileSync(__dirname + '/assets/empty-in
 assets[url('nested-inline.html')] = fs.readFileSync(__dirname + '/assets/nested-inline.html', 'utf-8');
 assets[url('column-inline.html')] = fs.readFileSync(__dirname + '/assets/column-inline.html', 'utf-8');
 assets[url('white-space.html')] = [fs.readFileSync(__dirname + '/assets/white-space.html', 'utf-8'), 512, 768];
+assets[url('mixed-white-space.html')] = fs.readFileSync(__dirname + '/assets/mixed-white-space.html', 'utf-8');
 assets[url('multiline.html')] = fs.readFileSync(__dirname + '/assets/multiline.html', 'utf-8');
 assets[url('br.html')] = fs.readFileSync(__dirname + '/assets/br.html', 'utf-8');
 assets[url('block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/block-in-inline.html', 'utf-8');

@@ -29,25 +29,43 @@ ParentBox.prototype.addLink = function(box) {
 	this.rightLink = true;
 };
 
-ParentBox.prototype.addLine = function(child, branch) {
+ParentBox.prototype.addLine = function(child, branch, force) {
 	this.stopEach();
+
+	var parent = this.parent;
+	var i = this.children.indexOf(child);
+	if(i === 0 && !branch && !force) return parent.addLine(this);
 
 	var children = this.children.slice();
 	var box = this.clone();
-	box.attach(branch);
 
-	for(var i = children.indexOf(child) + 1; i < children.length; i++) {
-		box.attach(children[i]);
+	if(branch) box.attach(branch);
+	else box.attach(child);
+
+	for(var j = i + 1; j < children.length; j++) {
+		box.attach(children[j]);
 	}
 
 	this.addLink(box);
-	this.parent.addLine(this, box);
+	parent.addLine(this, box);
 };
 
-ParentBox.prototype.isCollapsibleWhitespace = function() {
-	return this.children.every(function(child) {
-		return child.isCollapsibleWhitespace();
+ParentBox.prototype.hasContent = function() {
+	var hasOutline = this.padding.some() ||
+		this.border.some() ||
+		this.margin.some();
+
+	return hasOutline || this.children.some(function(child) {
+		return child.hasContent();
 	});
+};
+
+ParentBox.prototype.collapseWhitespace = function(strip) {
+	this.children.forEach(function(child) {
+		strip = child.collapseWhitespace(strip);
+	});
+
+	return strip;
 };
 
 ParentBox.prototype.attach = function(node, i) {

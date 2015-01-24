@@ -141,53 +141,6 @@ var lines = function(parent, boxes) {
 	});
 };
 
-var collapseWhitespace = function(parent, boxes, strip) {
-	boxes.forEach(function(child) {
-		var box;
-
-		if(child instanceof LineBox) {
-			if(child.isCollapsibleWhitespace()) return;
-			strip = false;
-		}
-
-		if(child instanceof TextBox) {
-			box = child.collapseWhitespace(parent, strip);
-			strip = child.endsWithCollapsibleWhitespace();
-		} else {
-			box = child.cloneWithLinks(parent);
-		}
-
-		if(child.children) strip = collapseWhitespace(box, child.children, strip);
-	});
-
-	return strip;
-};
-
-var breaks = function(parent, boxes, ancestor) {
-	ancestor = ancestor || parent;
-
-	var resume;
-
-	boxes.forEach(function(child) {
-		var isBreak = child instanceof LineBreakBox;
-		var box;
-
-		if(isBreak) {
-			parent = branch(ancestor, parent);
-			resume = parent.parent;
-		} else {
-			box = child.cloneWithLinks(parent);
-		}
-
-		if(box && child.children) {
-			var a = isBlockContainerBox(box) ? box : ancestor;
-			parent = breaks(box, child.children, a) || parent;
-		}
-	});
-
-	return resume;
-};
-
 module.exports = function(html, viewport) {
 	viewport = new Viewport(viewport.position, viewport.dimensions);
 
@@ -195,9 +148,7 @@ module.exports = function(html, viewport) {
 
 	viewport = [
 		blocks,
-		lines,
-		collapseWhitespace,
-		breaks,
+		lines
 	].reduce(function(acc, fn) {
 		var a = acc.clone();
 		fn(a, acc.children);

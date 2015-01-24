@@ -52,9 +52,12 @@ ImageBox.prototype.layout = function() {
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 };
 
-ImageBox.prototype.isEmpty =
-ImageBox.prototype.isCollapsibleWhitespace = function() {
+ImageBox.prototype.collapseWhitespace = function() {
 	return false;
+};
+
+ImageBox.prototype.hasContent = function() {
+	return true;
 };
 
 ImageBox.prototype.clone = function(parent) {
@@ -78,13 +81,34 @@ InlineImageBox.prototype.layout = function(offset, line) {
 	ImageBox.prototype.layout.call(this);
 
 	var style = this.style;
-	var parent = this.parent;
 
 	this.margin.left = this.toPx(style['margin-left']);
 	this.margin.right = this.toPx(style['margin-right']);
 
-	this.position.x = parent.position.x + offset.width + this.leftWidth();
-	this.position.y = parent.position.y;
+	var parent = this.parent;
+	var x = parent.position.x + offset.width + this.leftWidth();
+	var available = line.position.x + line.dimensions.width - x;
+
+	if(this.width() > available && !this._isFirst(line)) {
+		this._reset();
+		return parent.addLine(this);
+	}
+
+	this.position.x = x;
+	this.position.y = parent.position.y + this.topWidth();
+};
+
+InlineImageBox.prototype._reset = function() {
+	this.padding.reset();
+	this.border.reset();
+	this.margin.reset();
+
+	this.dimensions.width = 0;
+	this.dimensions.height = 0;
+};
+
+InlineImageBox.prototype._isFirst = function(line) {
+	return line.flatten().indexOf(this) === 0;
 };
 
 var BlockImageBox = function(parent, style, image) {

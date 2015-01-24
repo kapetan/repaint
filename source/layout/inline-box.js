@@ -11,6 +11,7 @@ InlineBox.prototype.layout = function(offset, line) {
 	this._layoutWidth();
 	this._layoutPosition(offset);
 	this._layoutChildren(line);
+	this._layoutWidth();
 	this._layoutHeight();
 };
 
@@ -53,7 +54,6 @@ InlineBox.prototype._layoutChildren = function(line) {
 		offset.width += child.width();
 	});
 
-	this._layoutWidth();
 	this.dimensions.width = offset.width;
 };
 

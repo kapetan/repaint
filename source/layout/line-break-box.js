@@ -1,12 +1,12 @@
 var util = require('util');
 
 var values = require('../css/values');
+var compute = require('../css/compute');
 var Box = require('./box');
 var ParentBox = require('./parent-box');
+var TextBox = require('./text-box');
 
-var Normal = values.Keyword.Normal;
-var Nowrap = values.Keyword.Nowrap;
-var PreLine = values.Keyword.PreLine;
+var Pre = values.Keyword.Pre;
 
 var LineBreakBox = function(parent, style) {
 	Box.call(this, style);
@@ -14,15 +14,25 @@ var LineBreakBox = function(parent, style) {
 
 	this.leftLink = false;
 	this.rightLink = false;
+
+	this._laidOut = false;
 };
 
 util.inherits(LineBreakBox, Box);
 
-LineBreakBox.prototype.layout = function() {};
+LineBreakBox.prototype.layout = function() {
+	if(this._laidOut) return;
+	this._laidOut = true;
 
-LineBreakBox.prototype.isCollapsibleWhitespace = function() {
-	var format = this.style['white-space'];
-	return Normal.is(format) || Nowrap.is(format) || PreLine.is(format);
+	this.parent.addLine(this);
+};
+
+LineBreakBox.prototype.collapseWhitespace = function() {
+	return false;
+};
+
+LineBreakBox.prototype.hasContent = function() {
+	return true;
 };
 
 LineBreakBox.prototype.isPx = ParentBox.prototype.isPx;
