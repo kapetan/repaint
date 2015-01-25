@@ -1,40 +1,43 @@
 var util = require('util');
 var fs = require('fs');
 var qs = require('querystring');
+var url = require('url');
 
 var serialize = require('./serialize');
 var render = require('../');
 
 var query = qs.parse(window.location.search.replace(/^\?/, ''));
 
-var url = function(path) {
-	var loc = window.location;
-	return util.format('%s//%s/test/assets/%s', loc.protocol, loc.host, path);
-};
-
 var assets = {};
-assets[url('simple-block.html')] = fs.readFileSync(__dirname + '/assets/simple-block.html', 'utf-8');
-assets[url('nested-block.html')] = fs.readFileSync(__dirname + '/assets/nested-block.html', 'utf-8');
-assets[url('stack-block.html')] = fs.readFileSync(__dirname + '/assets/stack-block.html', 'utf-8');
-assets[url('simple-inline.html')] = fs.readFileSync(__dirname + '/assets/simple-inline.html', 'utf-8');
-assets[url('empty-inline.html')] = fs.readFileSync(__dirname + '/assets/empty-inline.html', 'utf-8');
-assets[url('nested-inline.html')] = fs.readFileSync(__dirname + '/assets/nested-inline.html', 'utf-8');
-assets[url('column-inline.html')] = fs.readFileSync(__dirname + '/assets/column-inline.html', 'utf-8');
-assets[url('white-space.html')] = [fs.readFileSync(__dirname + '/assets/white-space.html', 'utf-8'), 512, 768];
-assets[url('mixed-white-space.html')] = fs.readFileSync(__dirname + '/assets/mixed-white-space.html', 'utf-8');
-assets[url('multiline.html')] = fs.readFileSync(__dirname + '/assets/multiline.html', 'utf-8');
-assets[url('br.html')] = fs.readFileSync(__dirname + '/assets/br.html', 'utf-8');
-assets[url('block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/block-in-inline.html', 'utf-8');
-assets[url('nested-block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/nested-block-in-inline.html', 'utf-8');
-assets[url('padded-block-in-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-block-in-inline.html', 'utf-8');
-assets[url('padded-inline.html')] = fs.readFileSync(__dirname + '/assets/padded-inline.html', 'utf-8');
-assets[url('padded-br.html')] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
-assets[url('padded-all.html')] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
-assets[url('font-size.html')] = fs.readFileSync(__dirname + '/assets/font-size.html', 'utf-8');
-assets[url('image.html')] = fs.readFileSync(__dirname + '/assets/image.html', 'utf-8');
-assets[url('inline-image.html')] = fs.readFileSync(__dirname + '/assets/inline-image.html', 'utf-8');
-assets[url('block-image.html')] = fs.readFileSync(__dirname + '/assets/block-image.html', 'utf-8');
-assets[url('multiline-image.html')] = fs.readFileSync(__dirname + '/assets/multiline-image.html', 'utf-8');
+assets['simple-block.html'] = fs.readFileSync(__dirname + '/assets/simple-block.html', 'utf-8');
+assets['nested-block.html'] = fs.readFileSync(__dirname + '/assets/nested-block.html', 'utf-8');
+assets['stack-block.html'] = fs.readFileSync(__dirname + '/assets/stack-block.html', 'utf-8');
+assets['simple-inline.html'] = fs.readFileSync(__dirname + '/assets/simple-inline.html', 'utf-8');
+assets['empty-inline.html'] = fs.readFileSync(__dirname + '/assets/empty-inline.html', 'utf-8');
+assets['nested-inline.html'] = fs.readFileSync(__dirname + '/assets/nested-inline.html', 'utf-8');
+assets['column-inline.html'] = fs.readFileSync(__dirname + '/assets/column-inline.html', 'utf-8');
+assets['white-space.html'] = [fs.readFileSync(__dirname + '/assets/white-space.html', 'utf-8'), 512, 768];
+assets['mixed-white-space.html'] = fs.readFileSync(__dirname + '/assets/mixed-white-space.html', 'utf-8');
+assets['multiline.html'] = fs.readFileSync(__dirname + '/assets/multiline.html', 'utf-8');
+assets['br.html'] = fs.readFileSync(__dirname + '/assets/br.html', 'utf-8');
+assets['block-in-inline.html'] = fs.readFileSync(__dirname + '/assets/block-in-inline.html', 'utf-8');
+assets['nested-block-in-inline.html'] = fs.readFileSync(__dirname + '/assets/nested-block-in-inline.html', 'utf-8');
+assets['padded-block-in-inline.html'] = fs.readFileSync(__dirname + '/assets/padded-block-in-inline.html', 'utf-8');
+assets['padded-inline.html'] = fs.readFileSync(__dirname + '/assets/padded-inline.html', 'utf-8');
+assets['padded-br.html'] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
+assets['padded-all.html'] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
+assets['font-size.html'] = fs.readFileSync(__dirname + '/assets/font-size.html', 'utf-8');
+assets['image.html'] = fs.readFileSync(__dirname + '/assets/image.html', 'utf-8');
+assets['inline-image.html'] = fs.readFileSync(__dirname + '/assets/inline-image.html', 'utf-8');
+assets['block-image.html'] = fs.readFileSync(__dirname + '/assets/block-image.html', 'utf-8');
+assets['multiline-image.html'] = fs.readFileSync(__dirname + '/assets/multiline-image.html', 'utf-8');
+
+var resolve = function(name) {
+	var loc = window.location;
+	var path = url.resolve(loc.pathname, name);
+
+	return util.format('%s//%s%s', loc.protocol, loc.host, path);
+};
 
 var canvas = function(element, options, callback) {
 	var canvas = document.createElement('canvas');
@@ -103,13 +106,13 @@ var row = function(element, options) {
 var container = document.getElementById('container');
 
 Object.keys(assets).forEach(function(asset) {
-	if(query.name && url(query.name) !== asset) return;
+	if(query.name && query.name !== asset) return;
 
 	var data = assets[asset];
 	data = Array.isArray(data) ? data : [data, 512, 256];
 
 	row(container, {
-		url: asset,
+		url: resolve(asset),
 		content: data[0],
 		viewport: {
 			position: { x: 0, y: 0 },

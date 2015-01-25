@@ -1,4 +1,4 @@
-.PHONY: build clean test-build test-watch dist/test
+.PHONY: build clean test-build test-watch test-copy test-clean
 
 build: dist
 	browserify source/index.js -o dist/index.js
@@ -6,20 +6,32 @@ build: dist
 clean:
 	rm -rf dist
 
-test-build: dist/test dist/test/index.html
+test-build: test-clean test-copy
 	browserify test/index.js -o dist/test/index.js
 
-test-watch: dist/test dist/test/index.html
-	onchange test/index.html -- /bin/sh -c 'make dist/test/index.html' &\
+test-watch: test-clean test-copy
+	onchange test/index.html -- /bin/sh -c 'make test-copy' &\
 	watchify test/index.js -v -d -o dist/test/index.js &\
 	node server.js
+
+test-copy: dist/test/index.html dist/test/css dist/test/images
+
+test-clean:
+	rm -rf dist/test
 
 dist:
 	mkdir -p dist
 
 dist/test:
-	rm -rf dist/test
 	mkdir -p dist/test
 
-dist/test/index.html: test/index.html
+dist/test/index.html: dist/test test/index.html
 	cp test/index.html dist/test/index.html
+
+dist/test/css: dist/test test/assets/css/*
+	rm -rf dist/test/css
+	cp -r test/assets/css dist/test/css
+
+dist/test/images: dist/test test/assets/images/*
+	rm -rf dist/test/images
+	cp -r test/assets/images dist/test/images
