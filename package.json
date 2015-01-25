@@ -4,13 +4,10 @@
   "description": "HTML rendering engine",
   "main": "source/index.js",
   "scripts": {
-    "prepare": "mkdir -p dist",
-    "build": "npm run prepare && browserify source/index.js -o dist/index.js",
-    "clean": "rm -rf dist/*",
-    "test-prepare": "rm -rf dist/test && mkdir -p dist/test",
-    "test-copy": "cp test/index.html dist/test/index.html",
-    "test-build": "npm run test-prepare && npm run test-copy && browserify test/index.js -o dist/test/index.js",
-    "test-watch": "npm run test-prepare && npm run test-copy && (onchange test/index.html -- /bin/sh -c 'npm run test-copy' & watchify test/index.js -v -d -o dist/test/index.js & node server.js)"
+    "build": "make build",
+    "clean": "make clean",
+    "test-build": "make test-build",
+    "test-watch": "make test-watch"
   },
   "keywords": [
     "html",
