@@ -15756,6 +15756,223 @@ if (typeof exports !== 'undefined') {
 
 },{}],113:[function(require,module,exports){
 var util = require('util');
+var unit = require('parse-unit');
+var extend = require('xtend');
+var textWidth = require('text-width');
+
+var supported = function() {
+	if(!textWidth.supported) return false;
+
+	var canvas = document.createElement('canvas');
+	var context = canvas.getContext('2d');
+
+	return (typeof context.getImageData === 'function');
+};
+
+var empty = function(size) {
+	return {
+		ascent: 0,
+		descent: 0,
+		height: 0,
+		size: size || 0
+	};
+};
+
+var px = function(size) {
+	if(typeof size === 'number') return size;
+
+	size = unit(size);
+
+	var v = size[0] || 0;
+	var u = size[1] || 'px';
+
+	switch(u) {
+		case 'px': return v;
+		case 'cm': return v * 37.8;
+		case 'mm': return v * 3.78;
+		case 'in': return v * 96;
+		case 'pt': return v * (4 / 3);
+		case 'pc': return v * 16;
+		default: return 0;
+	}
+};
+
+var font = function(options) {
+	options = extend({
+		style: 'normal',
+		variant: 'normal',
+		weight: 'normal',
+		size: 'medium',
+		family: 'sans-serif'
+	}, options);
+
+	return util.format('%s %s %s %s %s',
+		options.style,
+		options.variant,
+		options.weight,
+		options.size,
+		options.family);
+};
+
+var initialize = function() {
+	var canvas = document.createElement('canvas');
+	var context = canvas.getContext('2d');
+
+	context.textBaseline = 'baseline';
+	context.fillStyle = 'rgb(0, 0, 0, 1)';
+
+	var height = function(text, options) {
+		if(!options && typeof text === 'object') {
+			options = text;
+			text = null;
+		}
+
+		text = (typeof text !== 'string') ? 'Mg' : text;
+		options = options || {};
+
+		var size = ('size' in options) ? px(options.size) : 16;
+		options.size = size + 'px';
+
+		context.font = font(options);
+
+		var width = textWidth(text, options);
+
+		if(!width || !size) return empty(size);
+
+		context.fillText(text, 0, size);
+		context.fillText(text, width, 0);
+
+		var image = context.getImageData(0, 0, width * 2, size);
+		var ascent = 0;
+		var descent = 0;
+
+		outer:
+		for(var i = 0; i < image.height; i++) {
+			for(var j = 0; j < image.width; j++) {
+				var value = image.data[i * (image.width * 4) + j * 4 + 3];
+
+				if(!value) continue;
+
+				if(j < width && !ascent) ascent = i;
+				else if(j >= width) descent = i;
+
+				if(ascent && descent) break outer;
+			}
+		}
+
+		ascent = size - ascent;
+		context.clearRect(0, 0, width * 2, size);
+
+		return {
+			ascent: ascent,
+			descent: descent,
+			height: ascent + descent,
+			size: size
+		};
+	};
+
+	height.supported = true;
+	return height;
+};
+
+module.exports = supported() ? initialize() : (function() {
+	var height = function() {
+		return empty();
+	};
+
+	height.supported = false;
+	return height;
+}());
+
+},{"parse-unit":114,"text-width":115,"util":53,"xtend":116}],114:[function(require,module,exports){
+module.exports = function parseUnit(str, out) {
+    if (!out)
+        out = [ 0, '' ]
+
+    str = String(str)
+    var num = parseFloat(str, 10)
+    out[0] = num
+    out[1] = str.match(/[\d.\-\+]*\s*(.*)/)[1] || ''
+    return out
+}
+},{}],115:[function(require,module,exports){
+var util = require('util');
+var extend = require('xtend');
+
+var supported = function() {
+	if(typeof document === 'undefined' || typeof document.createElement !== 'function') return false;
+
+	var canvas = document.createElement('canvas');
+	if(typeof canvas.getContext !== 'function') return false;
+
+	var context = canvas.getContext('2d');
+	return !!context && (typeof context.measureText === 'function');
+};
+
+var initialize = function() {
+	var canvas = document.createElement('canvas');
+	var context = canvas.getContext('2d');
+
+	var width = function(str, options) {
+		options = extend({
+			style: 'normal',
+			variant: 'normal',
+			weight: 'normal',
+			size: 'medium',
+			family: 'sans-serif',
+			align: 'start',
+			baseline: 'alphabetic'
+		}, options);
+
+		var size = options.size;
+		if(typeof size === 'number') size = size + 'px';
+
+		context.font = util.format('%s %s %s %s %s',
+			options.style,
+			options.variant,
+			options.weight,
+			size,
+			options.family);
+		context.textAlign = options.align;
+		context.textBaseline = options.baseline;
+
+		return context.measureText(str).width;
+	};
+
+	width.supported = true;
+	return width;
+};
+
+module.exports = supported() ? initialize() : (function() {
+	var width = function() {
+		return 0;
+	};
+
+	width.supported = false;
+	return width;
+}());
+
+},{"util":53,"xtend":116}],116:[function(require,module,exports){
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+},{}],117:[function(require,module,exports){
+var util = require('util');
 var extend = require('xtend');
 
 var supported = function() {
@@ -15803,26 +16020,9 @@ module.exports = supported() ? initialize() : function() {
 	return 0;
 };
 
-},{"util":53,"xtend":114}],114:[function(require,module,exports){
-module.exports = extend
-
-function extend() {
-    var target = {}
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i]
-
-        for (var key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key]
-            }
-        }
-    }
-
-    return target
-}
-
-},{}],115:[function(require,module,exports){
+},{"util":53,"xtend":118}],118:[function(require,module,exports){
+module.exports=require(116)
+},{"/Users/mirza/workspace/browser/node_modules/text-height/node_modules/xtend/immutable.js":116}],119:[function(require,module,exports){
 var window = require("global/window")
 var once = require("once")
 var parseHeaders = require('parse-headers')
@@ -16001,7 +16201,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":116,"once":117,"parse-headers":121}],116:[function(require,module,exports){
+},{"global/window":120,"once":121,"parse-headers":125}],120:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -16014,7 +16214,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],117:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -16035,7 +16235,7 @@ function once (fn) {
   }
 }
 
-},{}],118:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -16083,7 +16283,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":119}],119:[function(require,module,exports){
+},{"is-function":123}],123:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -16100,7 +16300,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],120:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -16116,7 +16316,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],121:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -16148,7 +16348,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":118,"trim":120}],122:[function(require,module,exports){
+},{"for-each":122,"trim":124}],126:[function(require,module,exports){
 var ElementType = require('domelementtype');
 
 var declarations = require('./css/declarations');
@@ -16174,7 +16374,7 @@ module.exports = function(stylesheets, html) {
 	}
 };
 
-},{"./css/cascade":123,"./css/compute":125,"./css/declarations":127,"domelementtype":78}],123:[function(require,module,exports){
+},{"./css/cascade":127,"./css/compute":129,"./css/declarations":131,"domelementtype":78}],127:[function(require,module,exports){
 var util = require('util');
 var css = require('css');
 
@@ -16257,7 +16457,7 @@ module.exports = function(stylesheets, node) {
 	return style;
 };
 
-},{"./compare-specificity":124,"./declarations":127,"css":56,"util":53}],124:[function(require,module,exports){
+},{"./compare-specificity":128,"./declarations":131,"css":56,"util":53}],128:[function(require,module,exports){
 module.exports = function(first, second) {
 	for(var i = 0; i < first.length; i++) {
 		var a = first[i];
@@ -16270,7 +16470,7 @@ module.exports = function(first, second) {
 	return 0;
 };
 
-},{}],125:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 var declarations = require('./declarations');
 var values = require('./values');
 
@@ -16341,7 +16541,7 @@ module.exports = function(style, parentStyle) {
 	return style;
 };
 
-},{"./declarations":127,"./values":129}],126:[function(require,module,exports){
+},{"./declarations":131,"./values":133}],130:[function(require,module,exports){
 module.exports={
 	"display": {
 		"initial": "inline",
@@ -16441,7 +16641,7 @@ module.exports={
 	"border-left-color": "border-top-color"
 }
 
-},{}],127:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 var util = require('util');
 var capitalize = require('capitalize');
 var camelize = require('camelize');
@@ -16532,7 +16732,7 @@ Object.keys(declarations).forEach(function(property) {
 	exports[property] = define(property, definition);
 });
 
-},{"./declarations.json":126,"./values":129,"camelize":54,"capitalize":55,"util":53}],128:[function(require,module,exports){
+},{"./declarations.json":130,"./values":133,"camelize":54,"capitalize":55,"util":53}],132:[function(require,module,exports){
 var util = require('util');
 
 var CSSselect = require('CSSselect');
@@ -16629,7 +16829,7 @@ Stylesheet.prototype.toString = function() {
 
 module.exports = Stylesheet;
 
-},{"./compare-specificity":124,"./declarations":127,"CSSselect":1,"css":56,"specificity":112,"util":53}],129:[function(require,module,exports){
+},{"./compare-specificity":128,"./declarations":131,"CSSselect":1,"css":56,"specificity":112,"util":53}],133:[function(require,module,exports){
 var util = require('util');
 var capitalize = require('capitalize');
 var camelize = require('camelize');
@@ -16919,7 +17119,7 @@ exports.Color = Color;
 exports.FamilyName = FamilyName;
 exports.Keyword = Keyword;
 
-},{"./declarations.json":126,"camelize":54,"capitalize":55,"util":53}],130:[function(require,module,exports){
+},{"./declarations.json":130,"camelize":54,"capitalize":55,"util":53}],134:[function(require,module,exports){
 var Viewport = require('./layout/viewport');
 var LineBox = require('./layout/line-box');
 var TextBox = require('./layout/text-box');
@@ -16952,7 +17152,7 @@ var draw = function(box, context) {
 
 module.exports = draw;
 
-},{"./draw/background":131,"./draw/border":132,"./draw/image":133,"./draw/text":134,"./layout/image-box":141,"./layout/line-box":143,"./layout/text-box":146,"./layout/viewport":147}],131:[function(require,module,exports){
+},{"./draw/background":135,"./draw/border":136,"./draw/image":137,"./draw/text":138,"./layout/image-box":145,"./layout/line-box":147,"./layout/text-box":150,"./layout/viewport":151}],135:[function(require,module,exports){
 module.exports = function(box, context) {
 	if(!box.innerWidth() && !box.innerHeight()) return;
 
@@ -16965,7 +17165,7 @@ module.exports = function(box, context) {
 	context.fillRect(x, y, width, height);
 };
 
-},{}],132:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 var drawBorderTop = function(box, context) {
 	if(!box.border.top) return;
 
@@ -17021,7 +17221,7 @@ module.exports = function(box, context) {
 	drawBorderLeft(box, context);
 };
 
-},{}],133:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 module.exports = function(box, context) {
 	context.drawImage(box.image.data,
 		box.position.x,
@@ -17030,7 +17230,7 @@ module.exports = function(box, context) {
 		box.dimensions.height);
 };
 
-},{}],134:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 var util = require('util');
 
 module.exports = function(box, context) {
@@ -17046,7 +17246,7 @@ module.exports = function(box, context) {
 	context.fillText(box.display, box.position.x, box.position.y + box.dimensions.height);
 };
 
-},{"util":53}],135:[function(require,module,exports){
+},{"util":53}],139:[function(require,module,exports){
 var htmlparser = require('htmlparser2');
 var ElementType = require('domelementtype');
 var DomHandler = require('domhandler');
@@ -17085,7 +17285,7 @@ module.exports = function(html, callback) {
 	parser.done();
 };
 
-},{"domelementtype":78,"domhandler":79,"htmlparser2":89}],136:[function(require,module,exports){
+},{"domelementtype":78,"domhandler":79,"htmlparser2":89}],140:[function(require,module,exports){
 var url = require('url');
 var afterAll = require('after-all');
 
@@ -17137,7 +17337,7 @@ module.exports = function(base, nodes, callback) {
 	});
 };
 
-},{"after-all":20,"url":51}],137:[function(require,module,exports){
+},{"after-all":20,"url":51}],141:[function(require,module,exports){
 var afterAll = require('after-all');
 
 var html = require('./html');
@@ -17174,7 +17374,7 @@ module.exports = function(page, callback) {
 	});
 };
 
-},{"./css":122,"./draw":130,"./html":135,"./images":136,"./layout":138,"./stylesheets":150,"after-all":20}],138:[function(require,module,exports){
+},{"./css":126,"./draw":134,"./html":139,"./images":140,"./layout":142,"./stylesheets":154,"after-all":20}],142:[function(require,module,exports){
 var ElementType = require('domelementtype');
 
 var values = require('./css/values');
@@ -17337,7 +17537,7 @@ module.exports = function(html, viewport) {
 	return viewport;
 };
 
-},{"./css/values":129,"./layout/block-box":139,"./layout/image-box":141,"./layout/inline-box":142,"./layout/line-box":143,"./layout/line-break-box":144,"./layout/text-box":146,"./layout/viewport":147,"domelementtype":78}],139:[function(require,module,exports){
+},{"./css/values":133,"./layout/block-box":143,"./layout/image-box":145,"./layout/inline-box":146,"./layout/line-box":147,"./layout/line-break-box":148,"./layout/text-box":150,"./layout/viewport":151,"domelementtype":78}],143:[function(require,module,exports){
 var util = require('util');
 
 var ParentBox = require('./parent-box');
@@ -17488,7 +17688,7 @@ BlockBox.prototype._layoutHeight = function() {
 
 module.exports = BlockBox;
 
-},{"../css/values":129,"./parent-box":145,"util":53}],140:[function(require,module,exports){
+},{"../css/values":133,"./parent-box":149,"util":53}],144:[function(require,module,exports){
 var ElementType = require('domelementtype');
 
 var values = require('../css/values');
@@ -17572,6 +17772,11 @@ Box.prototype.height = function() {
 	return this.margin.top + this.outerHeight() + this.margin.bottom;
 };
 
+Box.prototype.translate = function(dx, dy) {
+	this.position.x += dx;
+	this.position.y += dy;
+};
+
 Box.prototype.styledBorderWidth = function(direction) {
 	var borderWidth = this.style['border-' + direction + '-width'];
 	var borderStyle = this.style['border-' + direction + '-style'];
@@ -17581,7 +17786,7 @@ Box.prototype.styledBorderWidth = function(direction) {
 
 module.exports = Box;
 
-},{"../css/values":129,"domelementtype":78}],141:[function(require,module,exports){
+},{"../css/values":133,"domelementtype":78}],145:[function(require,module,exports){
 var util = require('util');
 
 var Box = require('./box');
@@ -17679,7 +17884,18 @@ InlineImageBox.prototype.layout = function(offset, line) {
 	}
 
 	this.position.x = x;
-	this.position.y = parent.position.y + this.topWidth();
+	this.position.y = parent.baseline - this.dimensions.height - this.bottomWidth();
+};
+
+InlineImageBox.prototype.linePosition = function() {
+	return {
+		x: this.position.x - this.leftWidth(),
+		y: this.position.y - this.topWidth()
+	};
+};
+
+InlineImageBox.prototype.lineHeight = function() {
+	return this.height();
 };
 
 InlineImageBox.prototype._reset = function() {
@@ -17692,7 +17908,7 @@ InlineImageBox.prototype._reset = function() {
 };
 
 InlineImageBox.prototype._isFirst = function(line) {
-	return line.flatten().indexOf(this) === 0;
+	return line.contents().indexOf(this) === 0;
 };
 
 var BlockImageBox = function(parent, style, image) {
@@ -17766,12 +17982,15 @@ ImageBox.Block = BlockImageBox;
 
 module.exports = ImageBox;
 
-},{"../css/values":129,"./box":140,"./parent-box":145,"util":53}],142:[function(require,module,exports){
+},{"../css/values":133,"./box":144,"./parent-box":149,"util":53}],146:[function(require,module,exports){
 var util = require('util');
+var textHeight = require('text-height');
+
 var ParentBox = require('./parent-box');
 
 var InlineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
+	this.baseline = 0;
 };
 
 util.inherits(InlineBox, ParentBox);
@@ -17782,6 +18001,14 @@ InlineBox.prototype.layout = function(offset, line) {
 	this._layoutChildren(line);
 	this._layoutWidth();
 	this._layoutHeight();
+};
+
+InlineBox.prototype.linePosition = function() {
+	return this.position;
+};
+
+InlineBox.prototype.lineHeight = function() {
+	return this.dimensions.height;
 };
 
 InlineBox.prototype._layoutWidth = function() {
@@ -17804,6 +18031,7 @@ InlineBox.prototype._layoutWidth = function() {
 InlineBox.prototype._layoutPosition = function(offset) {
 	var parent = this.parent;
 	var style = this.style;
+	var size = this.toPx(style['font-size']);
 
 	this.border.top = this.toPx(this.styledBorderWidth('top'));
 	this.border.bottom = this.toPx(this.styledBorderWidth('bottom'));
@@ -17811,8 +18039,10 @@ InlineBox.prototype._layoutPosition = function(offset) {
 	this.padding.top = this.toPx(style['padding-top']);
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 
+	this.baseline = parent.baseline;
+
 	this.position.x = parent.position.x + offset.width + this.leftWidth();
-	this.position.y = parent.position.y;
+	this.position.y = this.baseline - size + this._textHeight().descent;
 };
 
 InlineBox.prototype._layoutChildren = function(line) {
@@ -17830,16 +18060,30 @@ InlineBox.prototype._layoutHeight = function() {
 	this.dimensions.height = this.toPx(this.style['font-size']);
 };
 
+InlineBox.prototype._textHeight = function() {
+	var style = this.style;
+	return textHeight({
+		size: style['font-size'].toString(),
+		family: style['font-family'].keyword,
+		weight: style['font-weight'].keyword,
+		style: style['font-style'].keyword
+	});
+};
+
 module.exports = InlineBox;
 
-},{"./parent-box":145,"util":53}],143:[function(require,module,exports){
+},{"./parent-box":149,"text-height":113,"util":53}],147:[function(require,module,exports){
 var util = require('util');
+var textHeight = require('text-height');
 
 var ParentBox = require('./parent-box');
 var TextBox = require('./text-box');
+var ImageBox = require('./image-box');
+var LineBreakBox = require('./line-break-box');
 
 var LineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
+	this.baseline = 0;
 };
 
 util.inherits(LineBox, ParentBox);
@@ -17855,9 +18099,11 @@ LineBox.prototype.flatten = function() {
 	return descedants;
 };
 
-LineBox.prototype.texts = function() {
+LineBox.prototype.contents = function(breaks) {
 	return this.flatten().filter(function(box) {
-		return box instanceof TextBox;
+		return box instanceof TextBox ||
+			box instanceof ImageBox ||
+			(breaks && box instanceof LineBreakBox);
 	});
 };
 
@@ -17873,11 +18119,26 @@ LineBox.prototype.layout = function(offset) {
 	this.position.x = parent.position.x;
 	this.position.y = parent.position.y + offset.height;
 
+	this._layoutStrut();
 	this._layoutChildren();
+	this._layoutHeight();
 };
 
 LineBox.prototype.collapseWhitespace = function() {
 	return ParentBox.prototype.collapseWhitespace.call(this, false);
+};
+
+LineBox.prototype._layoutStrut = function() {
+	var style = this.style;
+	var size = this.toPx(style['font-size']);
+	var height = textHeight({
+		size: style['font-size'].toString(),
+		family: style['font-family'].keyword,
+		weight: style['font-weight'].keyword,
+		style: style['font-style'].keyword
+	});
+
+	this.baseline = this.position.y + size - height.descent;
 };
 
 LineBox.prototype._layoutChildren = function() {
@@ -17887,15 +18148,31 @@ LineBox.prototype._layoutChildren = function() {
 	this.forEach(function(child) {
 		child.layout(offset, self);
 		offset.width += child.width();
-		self.dimensions.height = Math.max(self.dimensions.height, child.dimensions.height);
 	});
+};
 
-	if(!this.hasContent()) this.dimensions.height = 0;
+LineBox.prototype._layoutHeight = function() {
+	if(!this.hasContent()) return;
+
+	var minY = this.position.y;
+	var maxY = this.position.y;
+
+	var height = function(parent) {
+		var position = parent.linePosition();
+
+		minY = Math.min(minY, position.y);
+		maxY = Math.max(maxY, position.y + parent.lineHeight());
+		if(parent.children) parent.children.forEach(height);
+	};
+
+	this.children.forEach(height);
+	this.dimensions.height = maxY - minY;
+	this.translate(0, this.position.y - minY);
 };
 
 module.exports = LineBox;
 
-},{"./parent-box":145,"./text-box":146,"util":53}],144:[function(require,module,exports){
+},{"./image-box":145,"./line-break-box":148,"./parent-box":149,"./text-box":150,"text-height":113,"util":53}],148:[function(require,module,exports){
 var util = require('util');
 
 var values = require('../css/values');
@@ -17912,17 +18189,17 @@ var LineBreakBox = function(parent, style) {
 
 	this.leftLink = false;
 	this.rightLink = false;
-
-	this._laidOut = false;
 };
 
 util.inherits(LineBreakBox, Box);
 
-LineBreakBox.prototype.layout = function() {
-	if(this._laidOut) return;
-	this._laidOut = true;
+LineBreakBox.prototype.layout = function(offset, line) {
+	if(!this._isFirst(line)) return this.parent.addLine(this);
 
-	this.parent.addLine(this);
+	var parent = this.parent;
+
+	this.position.x = parent.position.x + offset.width;
+	this.position.y = parent.position.y;
 };
 
 LineBreakBox.prototype.collapseWhitespace = function() {
@@ -17933,13 +18210,25 @@ LineBreakBox.prototype.hasContent = function() {
 	return true;
 };
 
+LineBreakBox.prototype.linePosition = function() {
+	return this.position;
+};
+
+LineBreakBox.prototype.lineHeight = function() {
+	return 0;
+};
+
 LineBreakBox.prototype.isPx = ParentBox.prototype.isPx;
 LineBreakBox.prototype.clone = ParentBox.prototype.clone;
 LineBreakBox.prototype.cloneWithLinks = ParentBox.prototype.cloneWithLinks;
 
+LineBreakBox.prototype._isFirst = function(line) {
+	return line.contents(true).indexOf(this) === 0;
+};
+
 module.exports = LineBreakBox;
 
-},{"../css/compute":125,"../css/values":129,"./box":140,"./parent-box":145,"./text-box":146,"util":53}],145:[function(require,module,exports){
+},{"../css/compute":129,"../css/values":133,"./box":144,"./parent-box":149,"./text-box":150,"util":53}],149:[function(require,module,exports){
 var util = require('util');
 
 var Box = require('./box');
@@ -18061,6 +18350,14 @@ ParentBox.prototype.stopEach = function() {
 	if(this._stop) this._stop();
 };
 
+ParentBox.prototype.translate = function(dx, dy) {
+	Box.prototype.translate.call(this, dx, dy);
+
+	this.children.forEach(function(child) {
+		child.translate(dx, dy);
+	});
+};
+
 ParentBox.prototype.toPx = function(value) {
 	if(Auto.is(value)) return 0;
 	if(Percentage.is(value)) {
@@ -18073,7 +18370,7 @@ ParentBox.prototype.toPx = function(value) {
 
 module.exports = ParentBox;
 
-},{"../css/compute":125,"../css/values":129,"./box":140,"util":53}],146:[function(require,module,exports){
+},{"../css/compute":129,"../css/values":133,"./box":144,"util":53}],150:[function(require,module,exports){
 var util = require('util');
 var textWidth = require('text-width');
 
@@ -18223,6 +18520,14 @@ TextBox.prototype.hasContent = function() {
 	return !(this._isWhitespace() && this._isCollapsible());
 };
 
+TextBox.prototype.linePosition = function() {
+	return this.position;
+};
+
+TextBox.prototype.lineHeight = function() {
+	return this.dimensions.height;
+};
+
 TextBox.prototype.clone = function(parent) {
 	var clone = new TextBox(parent, this.text);
 	parent.children.push(clone);
@@ -18244,20 +18549,20 @@ TextBox.prototype._isWhitespace = function() {
 };
 
 TextBox.prototype._textContext = function(line) {
-	var texts = line.texts();
-	var i = texts.indexOf(this);
+	var contents = line.contents();
+	var i = contents.indexOf(this);
 	var precededByEmpty = true;
 	var followedByEmpty = true;
 
-	for(var j = 0; j < texts.length; j++) {
-		var empty = !texts[j].text.length;
+	for(var j = 0; j < contents.length; j++) {
+		var empty = !contents[j].hasContent();
 		if(j < i) precededByEmpty = precededByEmpty && empty;
 		if(j > i) followedByEmpty = followedByEmpty && empty;
 	}
 
 	return {
 		first: i === 0,
-		last: i === (texts.length - 1),
+		last: i === (contents.length - 1),
 		precededByEmpty: precededByEmpty,
 		followedByEmpty: followedByEmpty
 	};
@@ -18265,7 +18570,7 @@ TextBox.prototype._textContext = function(line) {
 
 module.exports = TextBox;
 
-},{"../css/values":129,"./box":140,"./parent-box":145,"./viewport":147,"./whitespace/breaks":148,"./whitespace/collapse":149,"text-width":113,"util":53}],147:[function(require,module,exports){
+},{"../css/values":133,"./box":144,"./parent-box":149,"./viewport":151,"./whitespace/breaks":152,"./whitespace/collapse":153,"text-width":117,"util":53}],151:[function(require,module,exports){
 var util = require('util');
 
 var values = require('../css/values');
@@ -18312,7 +18617,7 @@ Viewport.prototype.addLine = BlockBox.prototype.addLine;
 
 module.exports = Viewport;
 
-},{"../css/compute":125,"../css/values":129,"./block-box":139,"./box":140,"./parent-box":145,"util":53}],148:[function(require,module,exports){
+},{"../css/compute":129,"../css/values":133,"./block-box":143,"./box":144,"./parent-box":149,"util":53}],152:[function(require,module,exports){
 exports.hard = function(str, format) {
 	var hard = format === 'pre' || format === 'pre-wrap' || format === 'pre-line';
 	return hard ? str.split('\n') : [str];
@@ -18323,7 +18628,7 @@ exports.soft = function(str, format) {
 	return soft ? str.split(/( +|-+)/) : [str];
 };
 
-},{}],149:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 module.exports = function(str, options) {
 	options = options || {};
 
@@ -18348,7 +18653,7 @@ module.exports = function(str, options) {
 	return str;
 };
 
-},{}],150:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 var url = require('url');
 
 var ElementType = require('domelementtype');
@@ -18400,4 +18705,4 @@ module.exports = function(base, nodes, callback) {
 	});
 };
 
-},{"./css/stylesheet":128,"after-all":20,"domelementtype":78,"url":51,"xhr":115}]},{},[137]);
+},{"./css/stylesheet":132,"after-all":20,"domelementtype":78,"url":51,"xhr":119}]},{},[141]);
