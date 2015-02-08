@@ -95,7 +95,18 @@ InlineImageBox.prototype.layout = function(offset, line) {
 	}
 
 	this.position.x = x;
-	this.position.y = parent.position.y + this.topWidth();
+	this.position.y = parent.baseline - this.dimensions.height - this.bottomWidth();
+};
+
+InlineImageBox.prototype.linePosition = function() {
+	return {
+		x: this.position.x - this.leftWidth(),
+		y: this.position.y - this.topWidth()
+	};
+};
+
+InlineImageBox.prototype.lineHeight = function() {
+	return this.height();
 };
 
 InlineImageBox.prototype._reset = function() {
@@ -108,7 +119,7 @@ InlineImageBox.prototype._reset = function() {
 };
 
 InlineImageBox.prototype._isFirst = function(line) {
-	return line.flatten().indexOf(this) === 0;
+	return line.contents().indexOf(this) === 0;
 };
 
 var BlockImageBox = function(parent, style, image) {

@@ -147,6 +147,14 @@ TextBox.prototype.hasContent = function() {
 	return !(this._isWhitespace() && this._isCollapsible());
 };
 
+TextBox.prototype.linePosition = function() {
+	return this.position;
+};
+
+TextBox.prototype.lineHeight = function() {
+	return this.dimensions.height;
+};
+
 TextBox.prototype.clone = function(parent) {
 	var clone = new TextBox(parent, this.text);
 	parent.children.push(clone);
@@ -168,20 +176,20 @@ TextBox.prototype._isWhitespace = function() {
 };
 
 TextBox.prototype._textContext = function(line) {
-	var texts = line.texts();
-	var i = texts.indexOf(this);
+	var contents = line.contents();
+	var i = contents.indexOf(this);
 	var precededByEmpty = true;
 	var followedByEmpty = true;
 
-	for(var j = 0; j < texts.length; j++) {
-		var empty = !texts[j].text.length;
+	for(var j = 0; j < contents.length; j++) {
+		var empty = !contents[j].hasContent();
 		if(j < i) precededByEmpty = precededByEmpty && empty;
 		if(j > i) followedByEmpty = followedByEmpty && empty;
 	}
 
 	return {
 		first: i === 0,
-		last: i === (texts.length - 1),
+		last: i === (contents.length - 1),
 		precededByEmpty: precededByEmpty,
 		followedByEmpty: followedByEmpty
 	};

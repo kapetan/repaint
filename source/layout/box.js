@@ -81,6 +81,11 @@ Box.prototype.height = function() {
 	return this.margin.top + this.outerHeight() + this.margin.bottom;
 };
 
+Box.prototype.translate = function(dx, dy) {
+	this.position.x += dx;
+	this.position.y += dy;
+};
+
 Box.prototype.styledBorderWidth = function(direction) {
 	var borderWidth = this.style['border-' + direction + '-width'];
 	var borderStyle = this.style['border-' + direction + '-style'];

@@ -119,6 +119,14 @@ ParentBox.prototype.stopEach = function() {
 	if(this._stop) this._stop();
 };
 
+ParentBox.prototype.translate = function(dx, dy) {
+	Box.prototype.translate.call(this, dx, dy);
+
+	this.children.forEach(function(child) {
+		child.translate(dx, dy);
+	});
+};
+
 ParentBox.prototype.toPx = function(value) {
 	if(Auto.is(value)) return 0;
 	if(Percentage.is(value)) {

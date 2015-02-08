@@ -27,6 +27,7 @@ assets['padded-inline.html'] = fs.readFileSync(__dirname + '/assets/padded-inlin
 assets['padded-br.html'] = fs.readFileSync(__dirname + '/assets/padded-br.html', 'utf-8');
 assets['padded-all.html'] = fs.readFileSync(__dirname + '/assets/padded-all.html', 'utf-8');
 assets['font-size.html'] = fs.readFileSync(__dirname + '/assets/font-size.html', 'utf-8');
+assets['multiline-font-size.html'] = fs.readFileSync(__dirname + '/assets/multiline-font-size.html', 'utf-8');
 assets['image.html'] = fs.readFileSync(__dirname + '/assets/image.html', 'utf-8');
 assets['inline-image.html'] = fs.readFileSync(__dirname + '/assets/inline-image.html', 'utf-8');
 assets['block-image.html'] = fs.readFileSync(__dirname + '/assets/block-image.html', 'utf-8');

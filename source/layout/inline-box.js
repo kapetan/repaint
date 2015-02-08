@@ -1,8 +1,11 @@
 var util = require('util');
+var textHeight = require('text-height');
+
 var ParentBox = require('./parent-box');
 
 var InlineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
+	this.baseline = 0;
 };
 
 util.inherits(InlineBox, ParentBox);
@@ -13,6 +16,14 @@ InlineBox.prototype.layout = function(offset, line) {
 	this._layoutChildren(line);
 	this._layoutWidth();
 	this._layoutHeight();
+};
+
+InlineBox.prototype.linePosition = function() {
+	return this.position;
+};
+
+InlineBox.prototype.lineHeight = function() {
+	return this.dimensions.height;
 };
 
 InlineBox.prototype._layoutWidth = function() {
@@ -35,6 +46,7 @@ InlineBox.prototype._layoutWidth = function() {
 InlineBox.prototype._layoutPosition = function(offset) {
 	var parent = this.parent;
 	var style = this.style;
+	var size = this.toPx(style['font-size']);
 
 	this.border.top = this.toPx(this.styledBorderWidth('top'));
 	this.border.bottom = this.toPx(this.styledBorderWidth('bottom'));
@@ -42,8 +54,10 @@ InlineBox.prototype._layoutPosition = function(offset) {
 	this.padding.top = this.toPx(style['padding-top']);
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 
+	this.baseline = parent.baseline;
+
 	this.position.x = parent.position.x + offset.width + this.leftWidth();
-	this.position.y = parent.position.y;
+	this.position.y = this.baseline - size + this._textHeight().descent;
 };
 
 InlineBox.prototype._layoutChildren = function(line) {
@@ -59,6 +73,16 @@ InlineBox.prototype._layoutChildren = function(line) {
 
 InlineBox.prototype._layoutHeight = function() {
 	this.dimensions.height = this.toPx(this.style['font-size']);
+};
+
+InlineBox.prototype._textHeight = function() {
+	var style = this.style;
+	return textHeight({
+		size: style['font-size'].toString(),
+		family: style['font-family'].keyword,
+		weight: style['font-weight'].keyword,
+		style: style['font-style'].keyword
+	});
 };
 
 module.exports = InlineBox;
