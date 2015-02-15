@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+
+	<style type="text/css">
+		.outer-inline {
+			background-color: #ff0000;
+		}
+		.outer-block {
+			line-height: 2;
+		}
+		.inline-1 {
+			background-color: #ffa500;
+		}
+		.inline-1 .big {
+			font-size: 64px;
+			background-color: #ffa500;
+		}
+		.inline-2 {
+			background-color: #ffff00;
+		}
+		.inline-3 {
+			line-height: 50px;
+			background-color: #008000;
+		}
+		.inline-3 .big {
+			font-size: 32px;
+			background-color: #008000;
+		}
+		.inline-4 {
+			line-height: 50%;
+			background-color: #0000ff;
+		}
+		.inline-5 {
+			line-height: 0;
+			background-color: #4b0082;
+		}
+		.inline-6 {
+			line-height: 2;
+			background-color: #800080;
+		}
+	</style>
+</head>
+<body>
+	<span class="outer-inline">
+		<span class="inline-1">Lorem <span class="big">ipsum</span> dolor sit amet consectetur</span><br>
+		<span class="inline-2">Donec ac convallis nisi. Mauris fermentum est nec placerat tincidunt.</span><br>
+		<span class="inline-3">Nunc non risus <span class="big">gravida</span>, pharetra felis et, scelerisque lacus.</span><br>
+		<span class="inline-4">Suspendisse lacinia sit amet est id ornare.</span><br>
+		<span class="inline-5">Quisque sit amet lectus ornare,</span><br>
+		<span class="inline-6">ullamcorper diam in, varius mi.</span><br>
+	</span>
+
+	<div class="outer-block">
+		<span class="inline-1">Lorem ipsum dolor sit amet consectetur</span><br>
+		<span class="inline-2">Donec ac convallis nisi. Mauris fermentum est nec placerat tincidunt.</span><br>
+	</div>
+</body>
+</html>

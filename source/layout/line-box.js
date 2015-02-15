@@ -5,6 +5,7 @@ var ParentBox = require('./parent-box');
 var TextBox = require('./text-box');
 var ImageBox = require('./image-box');
 var LineBreakBox = require('./line-break-box');
+var values = require('../css/values');
 
 var LineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
@@ -58,7 +59,7 @@ LineBox.prototype._layoutStrut = function() {
 	var size = this.toPx(style['font-size']);
 	var height = textHeight({
 		size: style['font-size'].toString(),
-		family: style['font-family'].keyword,
+		family: style['font-family'].toString(),
 		weight: style['font-weight'].keyword,
 		style: style['font-style'].keyword
 	});
@@ -79,8 +80,8 @@ LineBox.prototype._layoutChildren = function() {
 LineBox.prototype._layoutHeight = function() {
 	if(!this.hasContent()) return;
 
-	var minY = this.position.y;
-	var maxY = this.position.y;
+	var minY = this._linePosition();
+	var maxY = minY + this._lineHeight();
 
 	var height = function(parent) {
 		var position = parent.linePosition();
@@ -92,7 +93,24 @@ LineBox.prototype._layoutHeight = function() {
 
 	this.children.forEach(height);
 	this.dimensions.height = maxY - minY;
-	this.translate(0, this.position.y - minY);
+	this.translateChildren(0, this.position.y - minY);
+};
+
+LineBox.prototype._linePosition = function() {
+	var lineHeight = this._lineHeight();
+	var size = this.toPx(this.style['font-size']);
+	var leading = (lineHeight - size) / 2;
+
+	return this.position.y - leading;
+};
+
+LineBox.prototype._lineHeight = function() {
+	var style = this.style;
+	var size = this.toPx(style['font-size']);
+	var lineHeight = style['line-height'];
+
+	return values.Number.is(lineHeight) ?
+		lineHeight.number * size : this.toPx(lineHeight);
 };
 
 module.exports = LineBox;

@@ -2,6 +2,7 @@ var util = require('util');
 var textHeight = require('text-height');
 
 var ParentBox = require('./parent-box');
+var values = require('../css/values');
 
 var InlineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
@@ -19,11 +20,23 @@ InlineBox.prototype.layout = function(offset, line) {
 };
 
 InlineBox.prototype.linePosition = function() {
-	return this.position;
+	var lineHeight = this.lineHeight();
+	var size = this.toPx(this.style['font-size']);
+	var leading = (lineHeight - size) / 2;
+
+	return {
+		x: this.position.x,
+		y: this.position.y - leading
+	};
 };
 
 InlineBox.prototype.lineHeight = function() {
-	return this.dimensions.height;
+	var style = this.style;
+	var size = this.toPx(style['font-size']);
+	var lineHeight = style['line-height'];
+
+	return values.Number.is(lineHeight) ?
+		lineHeight.number * size : this.toPx(lineHeight);
 };
 
 InlineBox.prototype._layoutWidth = function() {
@@ -79,7 +92,7 @@ InlineBox.prototype._textHeight = function() {
 	var style = this.style;
 	return textHeight({
 		size: style['font-size'].toString(),
-		family: style['font-family'].keyword,
+		family: style['font-family'].toString(),
 		weight: style['font-weight'].keyword,
 		style: style['font-style'].keyword
 	});

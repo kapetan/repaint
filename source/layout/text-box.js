@@ -39,7 +39,7 @@ TextString.prototype.width = function() {
 
 	return textWidth(this.normalized, {
 		size: style['font-size'].toString(),
-		family: style['font-family'].keyword,
+		family: style['font-family'].toString(),
 		weight: style['font-weight'].keyword,
 		style: style['font-style'].keyword
 	});

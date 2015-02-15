@@ -19,12 +19,12 @@ var LineBreakBox = function(parent, style) {
 util.inherits(LineBreakBox, Box);
 
 LineBreakBox.prototype.layout = function(offset, line) {
-	if(!this._isFirst(line)) return this.parent.addLine(this);
-
 	var parent = this.parent;
 
 	this.position.x = parent.position.x + offset.width;
 	this.position.y = parent.position.y;
+
+	parent.breakLine(this);
 };
 
 LineBreakBox.prototype.collapseWhitespace = function() {
@@ -46,9 +46,5 @@ LineBreakBox.prototype.lineHeight = function() {
 LineBreakBox.prototype.isPx = ParentBox.prototype.isPx;
 LineBreakBox.prototype.clone = ParentBox.prototype.clone;
 LineBreakBox.prototype.cloneWithLinks = ParentBox.prototype.cloneWithLinks;
-
-LineBreakBox.prototype._isFirst = function(line) {
-	return line.contents(true).indexOf(this) === 0;
-};
 
 module.exports = LineBreakBox;

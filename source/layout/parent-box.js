@@ -50,6 +50,19 @@ ParentBox.prototype.addLine = function(child, branch, force) {
 	parent.addLine(this, box);
 };
 
+ParentBox.prototype.breakLine = function(child) {
+	var children = this.children.slice();
+	var box = this.clone();
+	var i = children.indexOf(child);
+
+	for(var j = i + 1; j < children.length; j++) {
+		box.attach(children[j]);
+	}
+
+	this.addLink(box);
+	this.parent.addLine(this, box);
+};
+
 ParentBox.prototype.hasContent = function() {
 	var hasOutline = this.padding.some() ||
 		this.border.some() ||
@@ -121,7 +134,10 @@ ParentBox.prototype.stopEach = function() {
 
 ParentBox.prototype.translate = function(dx, dy) {
 	Box.prototype.translate.call(this, dx, dy);
+	this.translateChildren(dx, dy);
+};
 
+ParentBox.prototype.translateChildren = function(dx, dy) {
 	this.children.forEach(function(child) {
 		child.translate(dx, dy);
 	});

@@ -156,7 +156,8 @@ var Number = define(function(number) {
 Number.TYPE = '<number>';
 
 Number.parse = function(str) {
-	if(NUMBER.test(str)) return parseFloat(str);
+	if(!NUMBER.test(str)) return;
+	return new Number(parseFloat(str));
 };
 
 Number.is = function(value) {
