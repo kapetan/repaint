@@ -6,6 +6,7 @@ var values = require('../css/values');
 
 var Auto = values.Keyword.Auto;
 var Length = values.Length;
+var Percentage = values.Percentage;
 
 var ImageBox = function(parent, style, image) {
 	Box.call(this, style);
@@ -73,6 +74,7 @@ ImageBox.prototype.toPx = ParentBox.prototype.toPx;
 
 var InlineImageBox = function(parent, style, image) {
 	ImageBox.call(this, parent, style, image);
+	this.baseline = 0;
 };
 
 util.inherits(InlineImageBox, ImageBox);
@@ -94,8 +96,10 @@ InlineImageBox.prototype.layout = function(offset, line) {
 		return parent.addLine(this);
 	}
 
+	this._layoutBaseline();
+
 	this.position.x = x;
-	this.position.y = parent.baseline - this.dimensions.height - this.bottomWidth();
+	this.position.y = this.baseline - this.dimensions.height - this.bottomWidth();
 };
 
 InlineImageBox.prototype.linePosition = function() {
@@ -109,11 +113,32 @@ InlineImageBox.prototype.lineHeight = function() {
 	return this.height();
 };
 
+InlineImageBox.prototype._layoutBaseline = function() {
+	var parent = this.parent;
+	var style = this.style;
+	var alignment = this.style['vertical-align'];
+
+	if(Length.is(alignment)) {
+		this.baseline = parent.baseline - alignment.length;
+	} else if(Percentage.is(alignment)) {
+		var size = this.toPx(style['font-size']);
+		var lineHeight = style['line-height'];
+
+		var lh = values.Number.is(lineHeight) ?
+			lineHeight.number * size : this.toPx(lineHeight);
+
+		this.baseline = parent.baseline - (alignment.percentage * lh / 100);
+	}  else {
+		this.baseline = parent.baseline;
+	}
+};
+
 InlineImageBox.prototype._reset = function() {
 	this.padding.reset();
 	this.border.reset();
 	this.margin.reset();
 
+	this.baseline = 0;
 	this.dimensions.width = 0;
 	this.dimensions.height = 0;
 };

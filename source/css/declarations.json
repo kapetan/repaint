@@ -39,6 +39,11 @@
 		"values": ["<number>", "<percentage>", "<length>"],
 		"inherited": true
 	},
+	"vertical-align": {
+		"initial": "baseline",
+		"values": ["baseline", "<percentage>", "<length>"],
+		"inherited": false
+	},
 	"white-space": {
 		"initial": "normal",
 		"values": ["normal", "nowrap", "pre", "pre-wrap", "pre-line"],

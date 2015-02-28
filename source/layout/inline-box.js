@@ -4,6 +4,9 @@ var textHeight = require('text-height');
 var ParentBox = require('./parent-box');
 var values = require('../css/values');
 
+var Length = values.Length;
+var Percentage = values.Percentage;
+
 var InlineBox = function(parent, style) {
 	ParentBox.call(this, parent, style);
 	this.baseline = 0;
@@ -13,10 +16,11 @@ util.inherits(InlineBox, ParentBox);
 
 InlineBox.prototype.layout = function(offset, line) {
 	this._layoutWidth();
+	this._layoutBaseline();
 	this._layoutPosition(offset);
+	this._layoutHeight();
 	this._layoutChildren(line);
 	this._layoutWidth();
-	this._layoutHeight();
 };
 
 InlineBox.prototype.linePosition = function() {
@@ -67,8 +71,6 @@ InlineBox.prototype._layoutPosition = function(offset) {
 	this.padding.top = this.toPx(style['padding-top']);
 	this.padding.bottom = this.toPx(style['padding-bottom']);
 
-	this.baseline = parent.baseline;
-
 	this.position.x = parent.position.x + offset.width + this.leftWidth();
 	this.position.y = this.baseline - size + this._textHeight().descent;
 };
@@ -86,6 +88,20 @@ InlineBox.prototype._layoutChildren = function(line) {
 
 InlineBox.prototype._layoutHeight = function() {
 	this.dimensions.height = this.toPx(this.style['font-size']);
+};
+
+InlineBox.prototype._layoutBaseline = function() {
+	var parent = this.parent;
+	var style = this.style;
+	var alignment = this.style['vertical-align'];
+
+	if(Length.is(alignment)) {
+		this.baseline = parent.baseline - alignment.length;
+	} else if(Percentage.is(alignment)) {
+		this.baseline = parent.baseline - (alignment.percentage * this.lineHeight() / 100);
+	}  else {
+		this.baseline = parent.baseline;
+	}
 };
 
 InlineBox.prototype._textHeight = function() {

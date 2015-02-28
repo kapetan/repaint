@@ -4,8 +4,8 @@ var camelize = require('camelize');
 
 var declarations = require('./declarations.json');
 
-var VALUE_WITH_UNIT = /^(\d+(?:\.\d+)?)((?:\%|\w)+)$/;
-var NUMBER = /^\d+(?:\.\d+)?$/;
+var VALUE_WITH_UNIT = /^((?:-|\+)?(?:\d+(?:\.\d+)?))((?:\%|\w)+)$/;
+var NUMBER = /^(?:-|\+)?(?:\d+(?:\.\d+)?)$/;
 var INTEGER = /^\d+$/;
 
 var COLOR_HEX = /^#([0-9,a-f,A-F]{2})([0-9,a-f,A-F]{2})([0-9,a-f,A-F]{2})$/;
