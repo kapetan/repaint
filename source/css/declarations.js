@@ -46,12 +46,9 @@ var define = function(property, definition) {
 	Klass.parse = function(p, v, order, rule) {
 		if(property !== p.toLowerCase()) return;
 
-		var match = v.match(/^(\S+)(?:\s+(!important))?$/);
-		if(!match) return;
+		var important = /\s+!important$/.test(v);
 
-		var important = !!match[2];
-
-		v = match[1];
+		v = v.replace(/\s+!important$/, '');
 		v = parse(Klass.VALUES, v);
 
 		if(v) return new Klass(v, important, order, rule);

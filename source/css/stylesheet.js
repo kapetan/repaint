@@ -12,13 +12,23 @@ var parse = function(property, value, order, rule) {
 	return declaration && declaration.parse(property, value, order, rule);
 };
 
+var compile = function(selector) {
+	try {
+		return CSSselect.compile(selector);
+	} catch(err) {
+		return function() {
+			return false;
+		};
+	}
+};
+
 var Rule = function(selector, order, stylesheet) {
 	this.selector = selector;
 	this.order = order;
 	this.stylesheet = stylesheet;
 
 	this.declarations = [];
-	this.matches = CSSselect.compile(selector);
+	this.matches = compile(selector);
 
 	this.specificity = specificity
 		.calculate(selector)[0]

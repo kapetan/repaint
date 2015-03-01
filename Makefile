@@ -7,11 +7,11 @@ clean:
 	rm -rf dist
 
 test-build: test-clean test-copy
-	browserify test/index.js -o dist/test/index.js
+	browserify test/index.js -t brfs -o dist/test/index.js
 
 test-watch: test-clean test-copy
 	onchange test/index.html -- /bin/sh -c 'make test-copy' &\
-	watchify test/index.js -v -d -o dist/test/index.js &\
+	watchify test/index.js -v -d -t brfs -o dist/test/index.js &\
 	node server.js
 
 test-copy: dist/test/index.html dist/test/css dist/test/images

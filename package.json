@@ -23,6 +23,7 @@
     "css": "~2.1.0",
     "domelementtype": "~1.1.1",
     "domhandler": "~2.2.0",
+    "he": "^0.5.0",
     "htmlparser2": "~3.7.3",
     "specificity": "~0.1.4",
     "text-height": "^1.0.1",
@@ -36,10 +37,5 @@
     "root": "~1.1.0",
     "send": "~0.9.3",
     "watchify": "^2.2.1"
-  },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
   }
 }

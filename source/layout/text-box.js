@@ -1,5 +1,6 @@
 var util = require('util');
 var textWidth = require('text-width');
+var he = require('he');
 
 var values = require('../css/values');
 var collapse = require('./whitespace/collapse');
@@ -19,7 +20,7 @@ var TextString = function(str, style) {
 	this.original = str;
 	this.style = style;
 
-	this.normalized = str.replace(/\t/g, TAB);
+	this.normalized = he.decode(str).replace(/\t/g, TAB);
 };
 
 TextString.prototype.trimLeft = function() {

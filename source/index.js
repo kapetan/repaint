@@ -7,7 +7,11 @@ var images = require('./images');
 var layout = require('./layout');
 var draw = require('./draw');
 
+var noop = function() {};
+
 module.exports = function(page, callback) {
+	callback = callback || noop;
+
 	html(page.content, function(err, document) {
 		if(err) return callback(err);
 
