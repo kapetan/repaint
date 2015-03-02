@@ -23,13 +23,14 @@
     "css": "~2.1.0",
     "domelementtype": "~1.1.1",
     "domhandler": "~2.2.0",
-    "he": "^0.5.0",
+    "he": "~0.5.0",
     "htmlparser2": "~3.7.3",
     "parse-color": "^1.0.0",
     "specificity": "~0.1.4",
-    "text-height": "^1.0.1",
-    "text-width": "^1.1.0",
-    "xhr": "~1.17.0"
+    "text-height": "~1.0.1",
+    "text-width": "~1.1.0",
+    "xhr": "~1.17.0",
+    "xtend": "~4.0.0"
   },
   "devDependencies": {
     "brfs": "~1.2.0",

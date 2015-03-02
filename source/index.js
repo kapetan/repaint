@@ -1,4 +1,5 @@
 var afterAll = require('after-all');
+var extend = require('xtend');
 
 var html = require('./html');
 var stylesheets = require('./stylesheets');
@@ -11,6 +12,9 @@ var noop = function() {};
 
 module.exports = function(page, callback) {
 	callback = callback || noop;
+
+	var position = page.viewport.position;
+	page.viewport.position = extend({ x: 0, y: 0 }, position);
 
 	html(page.content, function(err, document) {
 		if(err) return callback(err);
