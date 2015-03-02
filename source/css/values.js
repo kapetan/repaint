@@ -1,15 +1,13 @@
 var util = require('util');
 var capitalize = require('capitalize');
 var camelize = require('camelize');
+var parseColor = require('parse-color');
 
 var declarations = require('./declarations.json');
 
 var VALUE_WITH_UNIT = /^((?:-|\+)?(?:\d+(?:\.\d+)?))((?:\%|\w)+)$/;
 var NUMBER = /^(?:-|\+)?(?:\d+(?:\.\d+)?)$/;
 var INTEGER = /^\d+$/;
-
-var COLOR_HEX = /^#([0-9,a-f,A-F]{2})([0-9,a-f,A-F]{2})([0-9,a-f,A-F]{2})$/;
-var COLOR_RGBA = /^rgb(a?)\(([^)]+)\)$/;
 
 var define = function(fn) {
 	var Klass = function() {
@@ -179,42 +177,8 @@ var Color = define(function(red, green, blue, alpha) {
 Color.TYPE = '<color>';
 
 Color.parse = function(str) {
-	var match = str.match(COLOR_HEX);
-
-	if(match) {
-		var red = parseInt(match[1], 16);
-		var green = parseInt(match[2], 16);
-		var blue = parseInt(match[3], 16);
-
-		return new Color(red, green, blue);
-	}
-
-	match = str.match(COLOR_RGBA);
-
-	if(match) {
-		var alpha = match[1];
-		var args = match[2].split(',').map(function(arg) {
-			return arg.trim();
-		});
-
-		if(alpha && args.length !== 4) return;
-		if(!alpha && args.length !== 3) return;
-
-		var rgb = args.slice(0, 3);
-		var valid = rgb.every(function(arg) {
-			return INTEGER.test(arg);
-		});
-
-		if(!valid) return;
-		if(alpha && !NUMBER.test(args[3])) return;
-
-		alpha = alpha && parseFloat(args[3]);
-		rgb = rgb.map(function(arg) {
-			return parseInt(arg, 10);
-		});
-
-		return new Color(rgb[0], rgb[1], rgb[2], alpha);
-	}
+	var rgba = parseColor(str).rgba;
+	if(rgba) return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 };
 
 Color.is = function(value) {
