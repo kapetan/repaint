@@ -204,6 +204,8 @@ FamilyName.parse = function(str) {
 	var isLastQuote = /'|"/.test(last);
 
 	if((isFirstQuote || isLastQuote) && first !== last) return;
+	if(isFirstQuote && isLastQuote) str = str.slice(1, -1);
+
 	return new FamilyName(str);
 };
 
