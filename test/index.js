@@ -17,6 +17,7 @@ assets['empty-inline.html'] = fs.readFileSync(__dirname + '/assets/empty-inline.
 assets['nested-inline.html'] = fs.readFileSync(__dirname + '/assets/nested-inline.html', 'utf-8');
 assets['column-inline.html'] = fs.readFileSync(__dirname + '/assets/column-inline.html', 'utf-8');
 assets['white-space.html'] = [fs.readFileSync(__dirname + '/assets/white-space.html', 'utf-8'), 512, 768];
+assets['pre.html'] = [fs.readFileSync(__dirname + '/assets/pre.html', 'utf-8'), 512, 384];
 assets['mixed-white-space.html'] = fs.readFileSync(__dirname + '/assets/mixed-white-space.html', 'utf-8');
 assets['multiline.html'] = fs.readFileSync(__dirname + '/assets/multiline.html', 'utf-8');
 assets['br.html'] = fs.readFileSync(__dirname + '/assets/br.html', 'utf-8');
@@ -111,6 +112,7 @@ var container = document.getElementById('container');
 
 Object.keys(assets).forEach(function(asset) {
 	if(query.name && query.name !== asset) return;
+	if(query.name) document.title += util.format(' (%s)', asset);
 
 	var data = assets[asset];
 	data = Array.isArray(data) ? data : [data, 512, 256];

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+
+	<style type="text/css">
+		.outer {
+			width: 50%;
+			background-color: #ff0000;
+		}
+		.inline-1 {
+			white-space: pre;
+			background-color: #ffa500;
+		}
+		.inline-2 {
+			white-space: pre-wrap;
+			background-color: #ffff00;
+		}
+		.inline-3 {
+			white-space: pre;
+			background-color: #008000;
+		}
+		.inline-4 {
+			white-space: normal;
+			background-color: #0000ff;
+		}
+		.inline-5 {
+			white-space: nowrap;
+			background-color: #4b0082;
+		}
+		.inline-6 {
+			background-color: #ffa500;
+		}
+		.inline-7 {
+			background-color: #ffff00;
+			padding-left: 50px;
+			padding-right: 50px;
+		}
+		.inline-8 {
+			white-space: pre;
+			background-color: #008000;
+		}
+		.inline-9 {
+			white-space: normal;
+		}
+		.inline-10 {
+			white-space: pre;
+			background-color: #0000ff;
+		}
+		.inline-11 {
+			white-space: normal;
+		}
+	</style>
+</head>
+<body>
+	<div class="outer">
+		<span class="inline-1">
+			<span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+		</span>
+		<span class="inline-2">
+			<span>Donec ac convallis nisi. Mauris fermentum est nec placerat tincidunt.</span>
+		</span>
+		<span class="inline-3">
+			<span>Nunc non risus gravida, </span><span class="inline-4">pharetra felis et, scelerisque lacus.</span>
+		</span>
+		<span class="inline-5">
+			<span>Suspendisse lacinia sit amet est id ornare.</span><span>Lorem ipsum dolor sit amet</span>
+		</span>
+		<span class="inline-6">
+			<span>consectetur adipiscing elit.</span><span class="inline-7"></span>
+		</span>
+		<span class="inline-8">
+			Donec ac convallis<span class="inline-9"></span>nisi. Mauris fermentum est nec placerat tincidunt.
+		</span>
+		<span class="inline-10">
+			<span>Nunc non risus gravida, pharetra<span class="inline-11"></span></span>felis et, scelerisque lacus.
+		</span>
+	</div>
+
+	<div class="outer">
+<span class="inline-1">Lorem ipsum
+
+</span>
+<span class="inline-1">dolor sit amet
+
+</span>
+	</div>
+</body>
+</html>

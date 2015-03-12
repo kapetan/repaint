@@ -14,7 +14,13 @@ var Nowrap = values.Keyword.Nowrap;
 var PreLine = values.Keyword.PreLine;
 var PreWrap = values.Keyword.PreWrap;
 
+var NEWLINE = '\n';
 var TAB = '        ';
+
+var isBreakable = function(box) {
+	var format = box.style['white-space'];
+	return Normal.is(format) || PreWrap.is(format) || PreLine.is(format);
+};
 
 var TextString = function(str, style) {
 	this.original = str;
@@ -60,6 +66,7 @@ var TextBox = function(styleOrParent, text) {
 
 	this.leftLink = false;
 	this.rightLink = false;
+	this.preservedNewline = false;
 };
 
 util.inherits(TextBox, Box);
@@ -77,6 +84,7 @@ TextBox.prototype.layout = function(offset, line) {
 
 	var text = textString(lines[0]);
 	var isCollapsible = this._isCollapsible();
+	var isBreakable = this._isBreakable() || textContext.precededByBreakable;
 	var isMultiline = lines.length > 1;
 
 	if(isCollapsible && textContext.precededByEmpty) text.trimLeft();
@@ -86,10 +94,10 @@ TextBox.prototype.layout = function(offset, line) {
 	var available = line.position.x + line.dimensions.width - x;
 	var rest;
 
-	if(available < 0) {
+	if(isBreakable && available < 0) {
 		rest = this.text;
 		text = textString();
-	} else if(text.width() > available) {
+	} else if(isBreakable && text.width() > available) {
 		var i = 0;
 		var words = breaks.soft(text.original, format);
 		var fillCurrent, fillNext = textString(words[i]);
@@ -112,6 +120,8 @@ TextBox.prototype.layout = function(offset, line) {
 	} else {
 		rest = this.text.slice(text.original.length + 1);
 	}
+
+	if(this.text.charAt(text.length) === NEWLINE) this.preservedNewline = true;
 
 	if(rest || isMultiline) {
 		var textBox = rest === this.text ? null : new TextBox(style, rest);
@@ -145,7 +155,7 @@ TextBox.prototype.collapseWhitespace = function(strip) {
 };
 
 TextBox.prototype.hasContent = function() {
-	return !(this._isWhitespace() && this._isCollapsible());
+	return this._isCollapsible() ? !this._isWhitespace() : (this.preservedNewline || !!this.dimensions.width);
 };
 
 TextBox.prototype.linePosition = function() {
@@ -172,6 +182,10 @@ TextBox.prototype._isCollapsible = function() {
 	return Normal.is(format) || Nowrap.is(format) || PreLine.is(format);
 };
 
+TextBox.prototype._isBreakable = function() {
+	return isBreakable(this);
+};
+
 TextBox.prototype._isWhitespace = function() {
 	return /^[\t\n\r ]*$/.test(this.text);
 };
@@ -179,11 +193,13 @@ TextBox.prototype._isWhitespace = function() {
 TextBox.prototype._textContext = function(line) {
 	var contents = line.contents();
 	var i = contents.indexOf(this);
+	var precededByBreakable = false;
 	var precededByEmpty = true;
 	var followedByEmpty = true;
 
 	for(var j = 0; j < contents.length; j++) {
 		var empty = !contents[j].hasContent();
+		if(j < i) precededByBreakable = precededByBreakable || isBreakable(contents[j]);
 		if(j < i) precededByEmpty = precededByEmpty && empty;
 		if(j > i) followedByEmpty = followedByEmpty && empty;
 	}
@@ -191,6 +207,7 @@ TextBox.prototype._textContext = function(line) {
 	return {
 		first: i === 0,
 		last: i === (contents.length - 1),
+		precededByBreakable: precededByBreakable,
 		precededByEmpty: precededByEmpty,
 		followedByEmpty: followedByEmpty
 	};
