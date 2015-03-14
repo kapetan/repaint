@@ -29,7 +29,7 @@ ElementRule.parse = function(element, str) {
 	var ast = css.parse(str, { silent: true });
 	var order = 1;
 
-	var declarations = ast.stylesheet
+	ast.stylesheet
 		.rules[0]
 		.declarations.forEach(function(d) {
 			var declaration = parse(d.property, d.value, order, rule);

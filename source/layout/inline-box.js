@@ -92,7 +92,6 @@ InlineBox.prototype._layoutHeight = function() {
 
 InlineBox.prototype._layoutBaseline = function() {
 	var parent = this.parent;
-	var style = this.style;
 	var alignment = this.style['vertical-align'];
 
 	if(Length.is(alignment)) {

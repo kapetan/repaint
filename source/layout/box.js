@@ -1,5 +1,3 @@
-var ElementType = require('domelementtype');
-
 var values = require('../css/values');
 
 var None = values.Keyword.None;

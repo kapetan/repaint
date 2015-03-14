@@ -1,6 +1,5 @@
 var ElementType = require('domelementtype');
 
-var declarations = require('./css/declarations');
 var cascade = require('./css/cascade');
 var compute = require('./css/compute');
 

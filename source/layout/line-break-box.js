@@ -1,12 +1,7 @@
 var util = require('util');
 
-var values = require('../css/values');
-var compute = require('../css/compute');
 var Box = require('./box');
 var ParentBox = require('./parent-box');
-var TextBox = require('./text-box');
-
-var Pre = values.Keyword.Pre;
 
 var LineBreakBox = function(parent, style) {
 	Box.call(this, style);

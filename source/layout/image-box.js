@@ -153,7 +153,7 @@ var BlockImageBox = function(parent, style, image) {
 
 util.inherits(BlockImageBox, ImageBox);
 
-BlockImageBox.prototype.layout = function(offset, line) {
+BlockImageBox.prototype.layout = function(offset) {
 	ImageBox.prototype.layout.call(this);
 
 	this._layoutWidth();
