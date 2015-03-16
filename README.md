@@ -33,6 +33,8 @@ The resulting `page` object contains some rendering details, like the parsed HTM
 
 The provided content is first parsed using the [htmlparser2][htmlparser2] module, and all stylesheets, including style attributes, are parsed with [css][css] and matched to HTML nodes with [css-select][css-select]. Before drawing the HTML the layout tree is constructed. Each node in the tree has the absolute position and dimensions calculated, and the text content is laid out according to the specification (e.g. each text line is contained in a line box).
 
+There is no default stylesheet included, so all css properties fallback to their default values. This also means that everything in the `head` tag will be visible unless explicitly hidden.
+
 # Issues
 
 At the moment only normal flow is implemented, and without support for lists and tables.
