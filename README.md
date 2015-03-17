@@ -39,7 +39,7 @@ There is no default stylesheet included, so all css properties fallback to their
 
 At the moment only normal flow is implemented, and without support for lists and tables.
 
-Follows an non-exhaustive list of missing functionallity.
+Follows a non-exhaustive list of missing functionallity.
 
 - Collapsing margins
 - Background images
@@ -50,7 +50,7 @@ Follows an non-exhaustive list of missing functionallity.
 - Tables
 - Pseudo elements, `:before`, `:after` and the `content` property
 - `overflow` property
-- `float` and `clear` propery
+- `float` and `clear` property
 - `position` property
 - CSS media types (`@media` rule)
 - Rounded corners (CSS3 functionallity, but would be nice to have)
