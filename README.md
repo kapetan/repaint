@@ -41,6 +41,7 @@ At the moment only normal flow is implemented, and without support for lists and
 
 Follows a non-exhaustive list of missing functionallity.
 
+- CSS shorthand properties
 - Collapsing margins
 - Background images
 - Inline blocks
