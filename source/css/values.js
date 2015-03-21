@@ -5,8 +5,8 @@ var parseColor = require('parse-color');
 
 var declarations = require('./declarations.json');
 
-var VALUE_WITH_UNIT = /^((?:-|\+)?(?:\d+(?:\.\d+)?))((?:\%|\w)+)$/;
-var NUMBER = /^(?:-|\+)?(?:\d+(?:\.\d+)?)$/;
+var VALUE_WITH_UNIT = /^([+-]?\d*[\.]?\d+)(\%|\w+)$/
+var NUMBER = /^[+-]?\d*[\.]?\d+$/;
 
 var define = function(fn) {
 	var Klass = function() {
