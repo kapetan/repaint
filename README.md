@@ -13,6 +13,7 @@ The [repaint-chrome][rc] repository provides a simple interface for editing and 
 - [kapetan/text-width][tw] markdown formatted readme
 - [mafintosh/peerflix][pf] markdown formatted readme with images
 - [Marcus Tullius Tiro][wiki] wikipedia mobile page. It's not possible to render arbitrary wikipedia pages since `repaint` doesn't support CSS shorthand properties.
+- [Repaint test page][test]. Simple test page presenting the HTML rendered by `repaint` on the left and an iframe with the same HTML on the right.
 
 # Usage
 
