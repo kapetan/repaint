@@ -40,6 +40,8 @@ Viewport.prototype.attach = ParentBox.prototype.attach;
 Viewport.prototype.detach = ParentBox.prototype.detach;
 Viewport.prototype.collapseWhitespace = ParentBox.prototype.collapseWhitespace;
 Viewport.prototype.addLink = ParentBox.prototype.addLink;
+Viewport.prototype.visibleWidth = ParentBox.prototype.visibleWidth;
+Viewport.prototype.visibleHeight = ParentBox.prototype.visibleHeight;
 Viewport.prototype.addLine = BlockBox.prototype.addLine;
 
 module.exports = Viewport;

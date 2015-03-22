@@ -143,6 +143,52 @@ ParentBox.prototype.translateChildren = function(dx, dy) {
 	});
 };
 
+ParentBox.prototype.visibleWidth = function() {
+	var min = function(box) {
+		return box.position.x - box.leftWidth();
+	};
+
+	var max = function(box) {
+		return box.position.x + box.dimensions.width + box.rightWidth();
+	};
+
+	var minX = min(this);
+	var maxX = max(this);
+
+	var height = function(parent) {
+		minX = Math.min(minX, min(parent));
+		maxX = Math.max(maxX, max(parent));
+
+		if(parent.children) parent.children.forEach(height);
+	};
+
+	this.children.forEach(height);
+	return maxX - minX;
+};
+
+ParentBox.prototype.visibleHeight = function() {
+	var min = function(box) {
+		return box.position.y - box.topWidth();
+	};
+
+	var max = function(box) {
+		return box.position.y + box.dimensions.height + box.bottomWidth();
+	};
+
+	var minY = min(this);
+	var maxY = max(this);
+
+	var height = function(parent) {
+		minY = Math.min(minY, min(parent));
+		maxY = Math.max(maxY, max(parent));
+
+		if(parent.children) parent.children.forEach(height);
+	};
+
+	this.children.forEach(height);
+	return maxY - minY;
+};
+
 ParentBox.prototype.toPx = function(value) {
 	if(Auto.is(value)) return 0;
 	if(Percentage.is(value)) {
