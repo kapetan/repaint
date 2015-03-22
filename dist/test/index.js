@@ -18057,8 +18057,8 @@ var parseColor = require('parse-color');
 
 var declarations = require('./declarations.json');
 
-var VALUE_WITH_UNIT = /^((?:-|\+)?(?:\d+(?:\.\d+)?))((?:\%|\w)+)$/;
-var NUMBER = /^(?:-|\+)?(?:\d+(?:\.\d+)?)$/;
+var VALUE_WITH_UNIT = /^([+-]?\d*[\.]?\d+)(\%|\w+)$/
+var NUMBER = /^[+-]?\d*[\.]?\d+$/;
 
 var define = function(fn) {
 	var Klass = function() {
@@ -18411,6 +18411,8 @@ module.exports = function(box, context) {
 
 },{}],142:[function(require,module,exports){
 module.exports = function(box, context) {
+	if(!box.image.complete) return;
+
 	context.drawImage(box.image.data,
 		box.position.x,
 		box.position.y,
@@ -19630,6 +19632,52 @@ ParentBox.prototype.translateChildren = function(dx, dy) {
 	});
 };
 
+ParentBox.prototype.visibleWidth = function() {
+	var min = function(box) {
+		return box.position.x - box.leftWidth();
+	};
+
+	var max = function(box) {
+		return box.position.x + box.dimensions.width + box.rightWidth();
+	};
+
+	var minX = min(this);
+	var maxX = max(this);
+
+	var height = function(parent) {
+		minX = Math.min(minX, min(parent));
+		maxX = Math.max(maxX, max(parent));
+
+		if(parent.children) parent.children.forEach(height);
+	};
+
+	this.children.forEach(height);
+	return maxX - minX;
+};
+
+ParentBox.prototype.visibleHeight = function() {
+	var min = function(box) {
+		return box.position.y - box.topWidth();
+	};
+
+	var max = function(box) {
+		return box.position.y + box.dimensions.height + box.bottomWidth();
+	};
+
+	var minY = min(this);
+	var maxY = max(this);
+
+	var height = function(parent) {
+		minY = Math.min(minY, min(parent));
+		maxY = Math.max(maxY, max(parent));
+
+		if(parent.children) parent.children.forEach(height);
+	};
+
+	this.children.forEach(height);
+	return maxY - minY;
+};
+
 ParentBox.prototype.toPx = function(value) {
 	if(Auto.is(value)) return 0;
 	if(Percentage.is(value)) {
@@ -19903,6 +19951,8 @@ Viewport.prototype.attach = ParentBox.prototype.attach;
 Viewport.prototype.detach = ParentBox.prototype.detach;
 Viewport.prototype.collapseWhitespace = ParentBox.prototype.collapseWhitespace;
 Viewport.prototype.addLink = ParentBox.prototype.addLink;
+Viewport.prototype.visibleWidth = ParentBox.prototype.visibleWidth;
+Viewport.prototype.visibleHeight = ParentBox.prototype.visibleHeight;
 Viewport.prototype.addLine = BlockBox.prototype.addLine;
 
 module.exports = Viewport;
