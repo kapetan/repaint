@@ -9,6 +9,15 @@
     "test-build": "make test-build",
     "test-watch": "make test-watch"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kapetan/repaint"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kapetan/repaint/issues"
+  },
+  "homepage": "https://github.com/kapetan/repaint",
   "keywords": [
     "html",
     "render",
