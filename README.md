@@ -1,10 +1,18 @@
 # repaint
 
-A HTML layout engine written in Javascript. Draws the provided HTML on a canvas. See the working [example][test]. There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
+A HTML layout engine written in Javascript. Draws the provided HTML on a canvas. There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
 
 	npm install repaint
 
 The module tries to follow the [CSS 2.1][css21] specification.
+
+# Examples
+
+The [repaint-chrome][rc] repository provides a simple interface for editing and rendering markdown and HTML using `repaint`. The markdown is rendered by first converting it to plain HTML.
+
+- [kapetan/text-width][tw] markdown formatted readme
+- [mafintosh/peerflix][pf] markdown formatted readme with images
+- [Marcus Tullius Tiro][wiki] wikipedia mobile page. It's not possible to render arbitrary wikipedia pages since `repaint` doesn't support CSS shorthand properties.
 
 # Usage
 
@@ -37,7 +45,7 @@ There is no default stylesheet included, so all css properties fallback to their
 
 # Issues
 
-At the moment only normal flow is implemented, and without support for lists and tables.
+At the moment only normal flow is implemented, and without support for CSS shorthand properties (e.g. `padding: 10px;`), lists and tables.
 
 Follows a non-exhaustive list of missing functionallity.
 
@@ -56,8 +64,13 @@ Follows a non-exhaustive list of missing functionallity.
 - CSS media types (`@media` rule)
 - Rounded corners (CSS3 functionallity, but would be nice to have)
 
+[rc]: https://github.com/kapetan/repaint-chrome
 [test]: http://kapetan.github.io/repaint/dist/test/index.html
 [css21]: http://www.w3.org/TR/2011/REC-CSS2-20110607
 [htmlparser2]: https://github.com/fb55/htmlparser2
 [css]: https://github.com/reworkcss/css
 [css-select]: https://github.com/fb55/css-select
+
+[tw]: http://kapetan.github.io/repaint-chrome/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkapetan%2Ftext-width%2Fmaster%2FREADME.md
+[pf]: http://kapetan.github.io/repaint-chrome/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmafintosh%2Fpeerflix%2Fmaster%2FREADME.md
+[wiki]: http://kapetan.github.io/repaint-chrome/?url=%2Fwiki%2Findex.html
