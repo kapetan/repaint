@@ -21,6 +21,8 @@ The module exposes a rendering function which accepts an options object and a ca
 
 Additionally the `url` is used to resolve any resources linked in the HTML (images and stylesheet links), also `viewport.position` specifies the initial viewport offset, e.g. a position of `{ x: 0, y: -10 }` would correspond to scrolling the page down 10 pixels.
 
+Require the module with `browserify` or a similar tool.
+
 ```javascript
 var repaint = require('repaint');
 
