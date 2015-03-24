@@ -6,7 +6,15 @@ Parses HTML, CSS, combines them and then calculates position and dimensions of a
 
 [http://kapetan.github.io/repaint-chrome/examples/wiki.html][wiki]
 
+# Why?
+
+3 years ago [@devongovett](http://twitter.com/devongovett) joked around with a [script](http://badassjs.com/post/20294238453/webkit-js-yes-it-has-finally-happened-browser) he created that could render HTML in the browser so that it would look the same in all browsers.
+
+In August I happened to run into a [post](http://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html) by [Matt Brubeck](http://limpet.net/mbrubeck/) who wanted to do a browser engine, and it got me thinking. So I started working on this project around that time, and I now think it's ready to be judged by others.
+
 There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
+
+# Installation
 
 	npm install repaint
 
