@@ -1,6 +1,8 @@
 # repaint
 
-A HTML layout engine written in Javascript. Draws the provided HTML on a canvas.
+A HTML layout engine written in Javascript. Takes HTML as input, renders it and outputs an image.
+
+Parses HTML, CSS, combines them and then calculates position and dimensions of all elements. It's essentially the same as your browser's rendering engine.
 
 [http://kapetan.github.io/repaint-chrome/examples/wiki.html][wiki]
 
