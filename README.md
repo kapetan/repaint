@@ -8,17 +8,11 @@ Parses HTML, CSS, combines them and then calculates position and dimensions of a
 
 # Why?
 
-3 years ago [@devongovett](http://twitter.com/devongovett) made an april fool's joke with a [script](http://badassjs.com/post/20294238453/webkit-js-yes-it-has-finally-happened-browser) he created that could render HTML in the browser. Obviously it was a hoax as it makes no sense to run a browser in a browser.
+Three years ago [@devongovett][wkjs] claimed that he had ported [WebKit to Javascript][wkjs]. Obviously it was a hoax as it makes no sense to run a browser in a browser.
 
-But then in August I happened to run into a [post](http://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html) by [Matt Brubeck](http://limpet.net/mbrubeck/) who wanted to do a browser engine, and it got me thinking. So I started working on this project around that time, and I now think it's ready to be judged by others.
+But then in August I happened to run into a [post][toy] by [Matt Brubeck][brubeck] who wanted to do a browser engine, and it got me thinking. So I started working on this project around that time, and I now think it's ready to be judged by others.
 
 There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
-
-# Installation
-
-	npm install repaint
-
-The module tries to follow the [CSS 2.1][css21] specification.
 
 # Examples
 
@@ -30,6 +24,10 @@ The [repaint-chrome][rc] repository provides a simple interface for editing and 
 - [Repaint test page][test]. Simple test page presenting the HTML rendered by `repaint` on the left and an iframe with the same HTML on the right.
 
 # Usage
+
+Available on `npm`.
+
+	npm install repaint
 
 The module exposes a rendering function which accepts an options object and a callback. The `content`, `context` and `viewport.dimensions.width` options are required, and should respectively provide the HTML content as a string, the canvas 2d context used for drawing and the initial viewport width.
 
@@ -60,6 +58,8 @@ The provided content is first parsed using the [htmlparser2][htmlparser2] module
 
 There is no default stylesheet included, so all css properties fallback to their default values. This also means that everything in the `head` tag will be visible unless explicitly hidden.
 
+The module tries to follow the [CSS 2.1][css21] specification.
+
 # Issues
 
 At the moment only normal flow is implemented, and without support for CSS shorthand properties (e.g. `padding: 10px;`), lists and tables.
@@ -81,6 +81,10 @@ Follows a non-exhaustive list of missing functionallity.
 - CSS media types (`@media` rule)
 - Rounded corners (CSS3 functionallity, but would be nice to have)
 
+[govett]: http://twitter.com/devongovett
+[wkjs]: http://badassjs.com/post/20294238453/webkit-js-yes-it-has-finally-happened-browser
+[toy]: http://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html
+[brubeck]: http://limpet.net/mbrubeck
 [rc]: https://github.com/kapetan/repaint-chrome
 [test]: http://kapetan.github.io/repaint/dist/test/index.html
 [css21]: http://www.w3.org/TR/2011/REC-CSS2-20110607
