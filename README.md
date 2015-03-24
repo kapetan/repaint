@@ -8,9 +8,9 @@ Parses HTML, CSS, combines them and then calculates position and dimensions of a
 
 # Why?
 
-Three years ago [@devongovett][wkjs] claimed that he had ported [WebKit to Javascript][wkjs]. Obviously it was a hoax as it makes no sense to run a browser in a browser.
+Three years ago [@devongovett][govett] claimed that he had ported [WebKit to Javascript][wkjs]. Obviously it was a hoax as it makes no sense to run a browser in a browser.
 
-But then in August I happened to run into a [post][toy] by [Matt Brubeck][brubeck] who wanted to do a browser engine, and it got me thinking. So I started working on this project around that time, and I now think it's ready to be judged by others.
+But then in August I happened to run into a [post][toy] by [Matt Brubeck][brubeck] who wanted to write a browser engine in Rust, and it got me thinking. So I started working on this project around that time, and I now think it's ready to be judged by others.
 
 There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
 
