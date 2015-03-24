@@ -1,6 +1,10 @@
 # repaint
 
-A HTML layout engine written in Javascript. Draws the provided HTML on a canvas. There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
+A HTML layout engine written in Javascript. Draws the provided HTML on a canvas.
+
+	http://kapetan.github.io/repaint-chrome/examples/wiki.html
+
+There are still a lot of functionalities missing, but it is able to render some basic HTML. Right now it only works in the browser, but might be made to run in a node environment with some modifications.
 
 	npm install repaint
 
