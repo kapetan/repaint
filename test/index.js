@@ -36,6 +36,7 @@ assets['multiline-image.html'] = fs.readFileSync(__dirname + '/assets/multiline-
 assets['line-height.html'] = [fs.readFileSync(__dirname + '/assets/line-height.html', 'utf-8'), 512, 384];
 assets['vertical-align.html'] = fs.readFileSync(__dirname + '/assets/vertical-align.html', 'utf-8');
 assets['vertical-align-image.html'] = fs.readFileSync(__dirname + '/assets/vertical-align-image.html', 'utf-8');
+assets['shorthand.html'] = fs.readFileSync(__dirname + '/assets/shorthand.html', 'utf-8');
 
 var resolve = function(name) {
 	var loc = window.location;

@@ -6,9 +6,9 @@ var xhr = require('xhr');
 
 var Stylesheet = require('./css/stylesheet');
 
-var link = function(base, node, callback) {
+var link = function(base, node, i, callback) {
 	var href = node.attribs.href;
-	if(!href) return callback(null, Stylesheet.empty());
+	if(!href) return callback(null, Stylesheet.empty(i));
 
 	href = url.resolve(base, href);
 
@@ -17,17 +17,17 @@ var link = function(base, node, callback) {
 		url: href
 	}, function(err, response, body) {
 		var errored = err || !/2\d\d/.test(response.status);
-		var stylesheet = errored ? Stylesheet.empty() : Stylesheet.parse(body);
+		var stylesheet = errored ? Stylesheet.empty(i) : Stylesheet.parse(body, i);
 
 		callback(null, stylesheet);
 	});
 };
 
-var style = function(node) {
+var style = function(node, i) {
 	var text = node.childNodes && node.childNodes[0];
-	if(!text || text.type !== ElementType.Text) return Stylesheet.empty();
+	if(!text || text.type !== ElementType.Text) return Stylesheet.empty(i);
 
-	return Stylesheet.parse(text.data);
+	return Stylesheet.parse(text.data, i);
 };
 
 module.exports = function(base, nodes, callback) {
@@ -44,7 +44,7 @@ module.exports = function(base, nodes, callback) {
 			stylesheets[i] = stylesheet;
 		});
 
-		if(node.name === 'link') link(base, node, cb);
-		else cb(null, style(node));
+		if(node.name === 'link') link(base, node, i, cb);
+		else cb(null, style(node, i));
 	});
 };

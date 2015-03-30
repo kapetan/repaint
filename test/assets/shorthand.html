@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+
+	<style type="text/css">
+		.block {
+			border: 1px solid #800080;
+			padding: 10px;
+		}
+
+		.block-1 {
+			background: #ff0000;
+		}
+		.block-2 {
+			background: #ffa500;
+			margin: 10px 5px;
+		}
+
+		.inline-1 {
+			font: 16px monospace;
+			background: #ffff00;
+		}
+		.inline-2 {
+			font: inherit;
+			background: #008000;
+		}
+		.inline-3 {
+			background: #0000ff;
+		}
+	</style>
+</head>
+<body>
+	<div class="block block-1">
+		<div class="block block-2"></div>
+	</div>
+
+	<span class="inline inline-1">
+		Lorem ipsum dolor sit amet
+		<span class="inline inline-2">consectetur
+			<span class="inline inline-3">adipiscing elit</span>
+		</span>
+	</span>
+</body>
+</html>

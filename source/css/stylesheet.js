@@ -6,6 +6,7 @@ var specificity = require('specificity');
 
 var declarations = require('./declarations');
 var compare = require('./compare-specificity');
+var expand = require('./expand-shorthand');
 
 var parse = function(property, value, order, rule) {
 	var declaration = declarations[property];
@@ -40,45 +41,53 @@ var Rule = function(selector, order, stylesheet) {
 };
 
 Rule.prototype.compareTo = function(other) {
-	var priority = other.stylesheet && this.stylesheet.compareTo(other.stylesheet);
+	var priority = other.stylesheet && this.stylesheet.comparePriorityTo(other.stylesheet);
 	if(priority) return priority;
 
-	var diff = compare(this.specificity, other.specificity);
-	return diff ? diff : this.order - other.order;
+	var specificity = compare(this.specificity, other.specificity);
+	if(specificity) return specificity;
+
+	var order = other.stylesheet && this.stylesheet.compareOrderTo(other.stylesheet);
+	return order ? order : this.order - other.order;
 };
 
 Rule.prototype.toString = function() {
 	return util.format('%s { %s }', this.selector, this.declarations.join(' '));
 };
 
-var Stylesheet = function(priority) {
+var Stylesheet = function(order, priority) {
+	this.order = order || 0;
 	this.priority = priority || 0;
 	this.rules = [];
 };
 
-Stylesheet.empty = function() {
-	return new Stylesheet();
+Stylesheet.empty = function(order, priority) {
+	return new Stylesheet(order, priority);
 };
 
-Stylesheet.parse = function(str, priority) {
+Stylesheet.parse = function(str, order, priority) {
 	var ast = css.parse(str, { silent: true });
 	var rules = ast.stylesheet.rules;
 
-	var stylesheet = new Stylesheet(priority);
+	var stylesheet = new Stylesheet(order, priority);
 
-	rules.forEach(function(r) {
+	rules.forEach(function(r, i) {
 		if(r.type !== 'rule') return;
 
 		r.selectors.forEach(function(s) {
-			var rule = new Rule(s, r.position.start.line, stylesheet);
+			var rule = new Rule(s, i, stylesheet);
 			var order = 1;
 
 			r.declarations.forEach(function(d) {
-				var declaration = parse(d.property, d.value, order, rule);
-				if(!declaration) return;
+				var longhand = expand(d.property, d.value);
 
-				rule.declarations.push(declaration);
-				order++;
+				Object.keys(longhand).forEach(function(key) {
+					var declaration = parse(key, longhand[key], order, rule);
+					if(!declaration) return;
+
+					rule.declarations.push(declaration);
+					order++;
+				});
 			});
 
 			if(rule.declarations.length) stylesheet.rules.push(rule);
@@ -94,8 +103,12 @@ Stylesheet.prototype.match = function(node) {
 	});
 };
 
-Stylesheet.prototype.compareTo = function(other) {
+Stylesheet.prototype.comparePriorityTo = function(other) {
 	return this.priority - other.priority;
+};
+
+Stylesheet.prototype.compareOrderTo = function(other) {
+	return this.order - other.order;
 };
 
 Stylesheet.prototype.toString = function() {

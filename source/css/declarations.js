@@ -6,8 +6,8 @@ var values = require('./values');
 var declarations = require('./declarations.json');
 
 var resolve = function(arr) {
-	return arr
-		.concat(['inherit', 'initial'])
+	return ['inherit', 'initial']
+		.concat(arr)
 		.map(function(val) {
 			if(Array.isArray(val)) {
 				var resolved = resolve(val);

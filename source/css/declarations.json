@@ -16,7 +16,7 @@
 	},
 	"font-family": {
 		"initial": "Times New Roman",
-		"values": [["<family-name>", "sans-serif", "serif", "monospace", "cursive", "fantasy"]],
+		"values": [["sans-serif", "serif", "monospace", "cursive", "fantasy", "<family-name>"]],
 		"inherited": true
 	},
 	"font-weight": {
