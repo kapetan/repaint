@@ -178,6 +178,7 @@ Color.TYPE = '<color>';
 Color.parse = function(str) {
 	var rgba = parseColor(str).rgba;
 	if(rgba) return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+	if(str === 'transparent') return Color(0, 0, 0, 0);
 };
 
 Color.is = function(value) {
