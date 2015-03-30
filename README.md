@@ -20,7 +20,7 @@ The [repaint-chrome][rc] repository provides a simple interface for editing and 
 
 - [kapetan/text-width][tw] markdown formatted readme
 - [mafintosh/peerflix][pf] markdown formatted readme with images
-- [Marcus Tullius Tiro][wiki] wikipedia mobile page. It's not possible to render arbitrary wikipedia pages since `repaint` doesn't support CSS shorthand properties.
+- [Marcus Tullius Tiro][wiki] wikipedia mobile page.
 - [Repaint test page][test]. Simple test page presenting the HTML rendered by `repaint` on the left and an iframe with the same HTML on the right.
 
 # Usage
@@ -62,11 +62,10 @@ The module tries to follow the [CSS 2.1][css21] specification.
 
 # Issues
 
-At the moment only normal flow is implemented, and without support for CSS shorthand properties (e.g. `padding: 10px;`), lists and tables.
+At the moment only normal flow is implemented, and without support for lists and tables.
 
 Follows a non-exhaustive list of missing functionallity.
 
-- CSS shorthand properties
 - Collapsing margins
 - Background images
 - Inline blocks
