@@ -40,6 +40,7 @@ var repaint = require('repaint');
 
 repaint({
 	url: '' + window.location,
+	stylesheets: ['body { color: red; }'],
 	content: '<html><body>Hello</body></html>',
 	context: canvas.getContext('2d'),
 	viewport: {
@@ -57,6 +58,8 @@ The resulting `page` object contains some rendering details, like the parsed HTM
 The provided content is first parsed using the [htmlparser2][htmlparser2] module, and all stylesheets, including style attributes, are parsed with [css][css] and matched to HTML nodes with [css-select][css-select]. Before drawing the HTML the layout tree is constructed. Each node in the tree has the absolute position and dimensions calculated, and the text content is laid out according to the specification (e.g. each text line is contained in a line box).
 
 There is no default stylesheet included, so all css properties fallback to their default values. This also means that everything in the `head` tag will be visible unless explicitly hidden.
+
+It's possible to use the `stylesheets` option to provide styles that will be included before all other stylesheets in the HTML.
 
 The module tries to follow the [CSS 2.1][css21] specification.
 

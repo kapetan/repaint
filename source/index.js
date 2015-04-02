@@ -7,8 +7,15 @@ var css = require('./css');
 var images = require('./images');
 var layout = require('./layout');
 var draw = require('./draw');
+var Stylesheet = require('./css/stylesheet');
 
 var noop = function() {};
+
+var defaultStylesheets = function(stylesheets) {
+	return (stylesheets || []).map(function(sheet, i) {
+		return Stylesheet.parse(sheet, i - stylesheets.length);
+	});
+};
 
 module.exports = function(page, callback) {
 	callback = callback || noop;
@@ -36,6 +43,7 @@ module.exports = function(page, callback) {
 		}));
 
 		stylesheets(page.url, document.stylesheets, next(function(err, stylesheets) {
+			stylesheets = defaultStylesheets(page.stylesheets).concat(stylesheets);
 			css(stylesheets, document.html);
 			page.stylesheets = stylesheets;
 		}));
