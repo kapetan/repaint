@@ -7,6 +7,7 @@ module.exports = function(html, callback) {
 	var scripts = [];
 	var images = [];
 	var anchors = [];
+	var title = null;
 
 	var ondone = function(err, html) {
 		if(err) return callback(err);
@@ -15,7 +16,8 @@ module.exports = function(html, callback) {
 			stylesheets: stylesheets,
 			scripts: scripts,
 			images: images,
-			anchors: anchors
+			anchors: anchors,
+			title: title
 		});
 	};
 
@@ -28,6 +30,7 @@ module.exports = function(html, callback) {
 		if(element.type === ElementType.Tag && element.name === 'link' && element.attribs.rel === 'stylesheet') stylesheets.push(element);
 		if(element.type === ElementType.Tag && element.name === 'img') images.push(element);
 		if(element.type === ElementType.Tag && element.name === 'a') anchors.push(element);
+		if(element.type === ElementType.Tag && element.name === 'title') title = element;
 	});
 
 	var parser = new htmlparser.Parser(handler);
