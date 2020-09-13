@@ -4,7 +4,7 @@ A HTML layout engine written in Javascript. Takes HTML as input, renders it and 
 
 Parses HTML, CSS, combines them and then calculates position and dimensions of all elements. It's essentially the same as your browser's rendering engine.
 
-[http://kapetan.github.io/repaint-chrome/examples/wiki.html][wiki]
+[https://kapetan.github.io/repaint-chrome/examples/wiki.html][wiki]
 
 # Why?
 
@@ -83,13 +83,13 @@ Follows a non-exhaustive list of missing functionallity.
 - CSS media types (`@media` rule)
 - Rounded corners (CSS3 functionallity, but would be nice to have)
 
-[govett]: http://twitter.com/devongovett
-[wkjs]: http://badassjs.com/post/20294238453/webkit-js-yes-it-has-finally-happened-browser
-[toy]: http://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html
-[brubeck]: http://limpet.net/mbrubeck
+[govett]: https://twitter.com/devongovett
+[wkjs]: https://badassjs.com/post/20294238453/webkit-js-yes-it-has-finally-happened-browser
+[toy]: https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html
+[brubeck]: https://limpet.net/mbrubeck
 [rc]: https://github.com/kapetan/repaint-chrome
-[test]: http://kapetan.github.io/repaint/dist/test/index.html
-[css21]: http://www.w3.org/TR/2011/REC-CSS2-20110607
+[test]: https://kapetan.github.io/repaint/dist/test/index.html
+[css21]: https://www.w3.org/TR/2011/REC-CSS2-20110607
 [htmlparser2]: https://github.com/fb55/htmlparser2
 [css]: https://github.com/reworkcss/css
 [css-select]: https://github.com/fb55/css-select
