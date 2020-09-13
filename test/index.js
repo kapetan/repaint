@@ -48,12 +48,17 @@ var resolve = function(name) {
 var canvas = function(element, options, callback) {
 	var canvas = document.createElement('canvas');
 	var dimensions = options.viewport.dimensions;
+	var dpr = window.devicePixelRatio || 1;
 
-	canvas.width = dimensions.width;
-	canvas.height = dimensions.height;
+	canvas.width = dimensions.width * dpr;
+	canvas.height = dimensions.height * dpr;
+	canvas.style.width = dimensions.width + 'px';
+	canvas.style.height = dimensions.height + 'px';
 
 	element.appendChild(canvas);
-	options.context = canvas.getContext('2d');
+	var context = canvas.getContext('2d');
+	context.scale(dpr, dpr);
+	options.context = context;
 
 	render(options, callback);
 };

@@ -1,5 +1,6 @@
 var util = require('util');
 var css = require('css');
+var dot = require('dot-prop');
 
 var compare = require('./compare-specificity');
 var declarations = require('./declarations');
@@ -29,15 +30,16 @@ ElementRule.parse = function(element, str) {
 	var ast = css.parse(str, { silent: true });
 	var order = 1;
 
-	ast.stylesheet
-		.rules[0]
-		.declarations.forEach(function(d) {
-			var declaration = parse(d.property, d.value, order, rule);
-			if(!declaration) return;
+	var declarations = dot(ast, 'stylesheet.rules.0.declarations');
+	if(!declarations) return rule;
 
-			rule.declarations.push(declaration);
-			order++;
-		});
+	declarations.forEach(function(d) {
+		var declaration = parse(d.property, d.value, order, rule);
+		if(!declaration) return;
+
+		rule.declarations.push(declaration);
+		order++;
+	});
 
 	return rule;
 };

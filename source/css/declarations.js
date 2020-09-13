@@ -20,7 +20,7 @@ var resolve = function(arr) {
 			if(val === values.Color.TYPE) return values.Color;
 			if(val === values.FamilyName.TYPE) return values.FamilyName;
 			else {
-				val = capitalize(camelize(val));
+				val = capitalize(camelize(val), true);
 				return values.Keyword[val];
 			}
 		});

@@ -7,11 +7,15 @@ var ParentBox = require('./parent-box');
 var BlockBox = require('./block-box');
 
 var Length = values.Length;
+var Auto = values.Keyword.Auto;
 
 var Viewport = function(position, dimensions) {
+	var height = (typeof dimensions.height === 'number') ?
+		Length.px(dimensions.height) : Auto;
+
 	Box.call(this, compute({
-		height: Length.px(dimensions.height),
-		width: Length.px(dimensions.width)
+		width: Length.px(dimensions.width),
+		height: height
 	}));
 
 	this.position = position;
@@ -34,6 +38,9 @@ Viewport.prototype.layout = function() {
 		child.layout(offset);
 		offset.height += child.height();
 	});
+
+	var dimensions = this.dimensions;
+	if(typeof dimensions.height !== 'number') dimensions.height = offset.height;
 };
 
 Viewport.prototype.attach = ParentBox.prototype.attach;

@@ -86,15 +86,16 @@ TextBox.prototype.layout = function(offset, line) {
 	var isCollapsible = this._isCollapsible();
 	var isBreakable = this._isBreakable() || textContext.precededByBreakable;
 	var isMultiline = lines.length > 1;
+	var isTrimable = isCollapsible && textContext.precededByEmpty;
 
-	if(isCollapsible && textContext.precededByEmpty) text.trimLeft();
+	if(isTrimable) text.trimLeft();
 	if(isCollapsible && (textContext.followedByEmpty || isMultiline)) text.trimRight();
 
 	var x = parent.position.x + offset.width;
 	var available = line.position.x + line.dimensions.width - x;
 	var rest;
 
-	if(isBreakable && available < 0) {
+	if(isBreakable && available < 0 && !textContext.first) {
 		rest = this.text;
 		text = textString();
 	} else if(isBreakable && text.width() > available) {
@@ -102,15 +103,25 @@ TextBox.prototype.layout = function(offset, line) {
 		var words = breaks.soft(text.original, format);
 		var fillCurrent, fillNext = textString(words[i]);
 
+		if(isTrimable) fillNext.trimLeft();
+
 		while(fillNext.width() <= available && i++ < words.length) {
 			fillCurrent = fillNext;
 			fillNext = fillNext.append(words[i]);
+			if(isTrimable) fillNext.trimLeft();
 		}
 
-		if(!fillCurrent && textContext.first) fillCurrent = textString(words[0]);
-		else if(!fillCurrent) fillCurrent = textString();
+		fillCurrent = fillCurrent || textString();
 
-		if(isCollapsible && textContext.precededByEmpty) fillCurrent.trimLeft();
+		if(!fillCurrent.width() && textContext.first) {
+			i = 0;
+
+			do {
+				fillCurrent = fillCurrent.append(words[i]);
+				if(isTrimable) fillCurrent.trimLeft();
+			} while(!fillCurrent.width() && i++ < words.length);
+		}
+
 		if(isCollapsible) fillCurrent.trimRight();
 
 		var newline = fillCurrent.original === text.original ? 1 : 0;

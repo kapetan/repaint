@@ -1,5 +1,6 @@
 var url = require('url');
 var afterAll = require('after-all');
+var he = require('he');
 
 var empty = function(src) {
 	return {
@@ -35,6 +36,7 @@ module.exports = function(base, nodes, callback) {
 
 		if(!src) return cb();
 
+		src = he.decode(src);
 		src = url.resolve(base, src);
 
 		var image = new Image();

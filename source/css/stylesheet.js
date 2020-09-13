@@ -1,6 +1,6 @@
 var util = require('util');
 
-var CSSselect = require('CSSselect');
+var CSSselect = require('css-select');
 var css = require('css');
 var specificity = require('specificity');
 
@@ -72,7 +72,7 @@ Stylesheet.parse = function(str, order, priority) {
 	var stylesheet = new Stylesheet(order, priority);
 
 	rules.forEach(function(r, i) {
-		if(r.type !== 'rule') return;
+		if(r.type !== 'rule' || !r.declarations) return;
 
 		r.selectors.forEach(function(s) {
 			var rule = new Rule(s, i, stylesheet);
