@@ -1,6 +1,6 @@
 var util = require('util');
 
-var CSSselect = require('CSSselect');
+var CSSselect = require('css-select');
 var css = require('css');
 var specificity = require('specificity');
 

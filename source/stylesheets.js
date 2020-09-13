@@ -18,7 +18,7 @@ var link = function(base, node, i, callback) {
 		method: 'GET',
 		url: href
 	}, function(err, response, body) {
-		var errored = err || !/2\d\d/.test(response.status);
+		var errored = err || !/2\d\d/.test(response.statusCode);
 		var stylesheet = errored ? Stylesheet.empty(i) : Stylesheet.parse(body, i);
 
 		callback(null, stylesheet);

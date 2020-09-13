@@ -28,7 +28,7 @@ var keywords = function(values, Klass) {
 
 		if(isPredefined) return;
 
-		var n = capitalize(camelize(v));
+		var n = capitalize(camelize(v), true);
 		if(Klass[n]) return;
 
 		Klass[n] = new Klass(v);

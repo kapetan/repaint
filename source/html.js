@@ -1,6 +1,6 @@
 var htmlparser = require('htmlparser2');
 var ElementType = require('domelementtype');
-var DomHandler = require('domhandler');
+var DomHandler = require('domhandler').DomHandler;
 
 module.exports = function(html, callback) {
 	var stylesheets = [];
