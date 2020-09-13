@@ -1,6 +1,6 @@
 {
   "name": "repaint",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "HTML rendering engine",
   "main": "source/index.js",
   "scripts": {
