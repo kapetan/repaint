@@ -48,11 +48,11 @@
     "xtend": "~4.0.0"
   },
   "devDependencies": {
-    "brfs": "~1.2.0",
-    "browserify": "~6.0.3",
-    "onchange": "0.0.2",
-    "root": "~1.1.0",
-    "send": "~0.9.3",
-    "watchify": "~2.2.1"
+    "brfs": "^2.0.2",
+    "browserify": "^16.5.2",
+    "onchange": "^7.0.2",
+    "root": "^3.2.0",
+    "send": "^0.17.1",
+    "watchify": "^3.11.1"
   }
 }
