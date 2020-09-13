@@ -94,6 +94,6 @@ Follows a non-exhaustive list of missing functionallity.
 [css]: https://github.com/reworkcss/css
 [css-select]: https://github.com/fb55/css-select
 
-[tw]: http://kapetan.github.io/repaint-chrome/examples/text-width.html
-[pf]: http://kapetan.github.io/repaint-chrome/examples/peerflix.html
-[wiki]: http://kapetan.github.io/repaint-chrome/examples/wiki.html
+[tw]: https://kapetan.github.io/repaint-chrome/examples/text-width.html
+[pf]: https://kapetan.github.io/repaint-chrome/examples/peerflix.html
+[wiki]: https://kapetan.github.io/repaint-chrome/examples/wiki.html
