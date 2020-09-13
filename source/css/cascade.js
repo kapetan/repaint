@@ -30,7 +30,7 @@ ElementRule.parse = function(element, str) {
 	var ast = css.parse(str, { silent: true });
 	var order = 1;
 
-	var declarations = dot(ast, 'stylesheet.rules.0.declarations');
+	var declarations = dot.get(ast, 'stylesheet.rules.0.declarations');
 	if(!declarations) return rule;
 
 	declarations.forEach(function(d) {
